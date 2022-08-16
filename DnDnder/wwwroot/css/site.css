@@ -1,0 +1,121 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+    height: 100vh;
+    background-color: #f2f2f2 !important;
+}
+
+.bodyBackGroundStripe {
+    background-color: #cccccc !important;
+    left: 20%;
+    right: 20%;
+    height: 100%;
+    z-index: 2;
+}
+
+.layoutContainer {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    margin: 0 auto !important;
+    height: 100% !important;
+    width: auto;
+    z-index: 1;
+    min-height: calc(100vh-0px);
+}
+
+.footerContainer {
+    margin-left: 2%;
+    margin-bottom: 0px;
+    position:fixed;
+    bottom:0;
+    left: 5px;
+    clear: both;
+}
+
+.footerText {
+    text-align: left !important;
+}
+
+.navBarZOverride {
+    z-index: 3;
+    display: flex !important;
+}
+
+.bannerContainer {
+    display: block;
+    width: 100%;
+    padding: 0%;
+    margin: 0%;
+    z-index: 3;
+}
+
+.bannerContainer > .bannerImage {
+    display: block;
+    width: 100%;
+    padding: 0%;
+    margin: 0%;
+}
+
+.logoText {
+    font-size: xx-large;
+    color: #b30000;
+}
+
+.customTable {
+    height: 100%;
+    width: auto;
+    display: table;
+    border-collapse: separate;
+    border-spacing: 50px;
+    table-layout:inherit;
+}
+
+.tableRow {
+    display: table-row;
+    width: 100%;
+    text-align: center;
+}
+
+.tableHeaderImg {
+    height: 250px;
+    width: 250px;
+    display: table-cell;
+    border-radius: 50%;
+    text-align: center;
+}
+.tableHeaderText {
+    display: table-cell;
+    font-weight: normal;
+    font-size: 150%;
+    /*font-family: 'Times New Roman', Times, serif, Ca;*/
+}
+
+.tableData {
+    display: table-cell;
+
+}
+
+@media screen and (max-width: 1244px) {
+    .customTable, .tableRow {
+        display: block;
+        width: inherit;
+    }
+
+    .tableData {
+        display: inline-block;
+    }
+}
