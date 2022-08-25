@@ -9,7 +9,8 @@
     <link rel="stylesheet" href="~/DnDnder.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/FormStyles.css" asp-append-version="true" />
 </head>
-<body>
+
+<body onload="getBannerImageForPage()">
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow navBarZOverride">
             <div class="container">
@@ -26,6 +27,11 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
                         </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-page="/View">Campaign</a>
+                        </li>
+
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>
@@ -34,7 +40,23 @@
     </header>
     
     <div class="bannerContainer">
-        <img class="bannerImage" src="/images/bannerImage.png" alt="A party gathers in an inn" />
+        @*@if(@ViewData["Title"].Equals("Home - DnDnder"))
+        {
+            Console.Write("Title Retrieved was " + @ViewData["Title"]);
+            <img id="bannerImage"  src="~/images/bannerImage.png" alt="A party gathers in an inn" />
+        }
+        else if(@ViewData["Title"].Equals("Register - DnDnder"))
+        {
+            Console.Write("Title Retrieved was " + @ViewData["Title"]);
+            <img id="bannerImage"  src="~/images/RegisterBannerImage.jpg" alt="A party gathers in an inn" />
+        }
+        else
+        {  
+            Console.Write("Title Retrieved was " + @ViewData["Title"]);
+            <img id="bannerImage"  src="~/images/bannerImage.png" alt="A party gathers in an inn" />
+        }*@
+
+        <img class="bannerImage" src="/images/bannerImage.png" alt=""/>
     </div>
 
     <div class="layoutContainer">

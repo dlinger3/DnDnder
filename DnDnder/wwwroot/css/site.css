@@ -76,26 +76,24 @@ body {
 }
 
 .customTable {
-    height: 100%;
-    width: auto;
+    height: auto;
+    width: 100%;
     display: table;
     border-collapse: separate;
     border-spacing: 50px;
     table-layout:inherit;
+    margin: 0px;
 }
 
 .tableRow {
     display: table-row;
     width: 100%;
-    text-align: center;
 }
 
 .tableHeaderImg {
     height: 250px;
     width: 250px;
-    display: table-cell;
     border-radius: 50%;
-    text-align: center;
 }
 .tableHeaderText {
     display: table-cell;
@@ -109,13 +107,34 @@ body {
 
 }
 
-@media screen and (max-width: 1244px) {
+@media screen and (max-width: 1360px) {
     .customTable, .tableRow {
         display: block;
-        width: inherit;
     }
 
     .tableData {
-        display: inline-block;
+        display: block;
+    }
+
+    .tableHeaderImg {
+        height: 200px;
+        width: 200px;
+        border-radius: 50%;
+    }
+}
+
+@media screen and (max-width: 800px) {
+    .customTable, .tableRow {
+        display: block;
+    }
+
+    .tableData {
+        display: block;
+    }
+
+    .tableHeaderImg {
+        height: 150px;
+        width: 150px;
+        border-radius: 50%;
     }
 }
