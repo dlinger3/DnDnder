@@ -15,5 +15,7 @@ namespace DnDnder.Data
         }
 
         public DbSet<DnDnder.Models.campaign> campaign { get; set; } = default!;
+
+        public DbSet<DnDnder.Models.Character>? Character { get; set; }
     }
 }

@@ -13,6 +13,7 @@ namespace DnDnder.Models
         public string worldName { get; set; }
 
         //Variable that can contain details to provide user details on a campaign
+        [MaxLength (5000)]
         public string details { get; set; }
     }
 }
