@@ -1,4 +1,4 @@
-﻿@model DnDnder.Models.Character
+﻿@model Tavern.Models.Character
 
 @{
     ViewData["Title"] = "Details";
@@ -40,6 +40,12 @@
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.alignment)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.bio)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.bio)
         </dd>
     </dl>
 </div>

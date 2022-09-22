@@ -1,4 +1,4 @@
-﻿@model IEnumerable<DnDnder.Models.Character>
+﻿@model IEnumerable<Tavern.Models.Character>
 
 @{
     ViewData["Title"] = "Index";
@@ -28,6 +28,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.alignment)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.bio)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -48,6 +51,9 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.alignment)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.bio)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

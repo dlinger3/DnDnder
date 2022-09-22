@@ -5,16 +5,16 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using DnDnder.Data;
-using DnDnder.Models;
+using Tavern.Data.Migrations;
+using Tavern.Models;
 
-namespace DnDnder
+namespace Tavern.Controllers
 {
     public class CharactersController : Controller
     {
-        private readonly DnDnderContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public CharactersController(DnDnderContext context)
+        public CharactersController(ApplicationDbContext context)
         {
             _context = context;
         }
@@ -22,9 +22,9 @@ namespace DnDnder
         // GET: Characters
         public async Task<IActionResult> Index()
         {
-              return _context.Character != null ? 
-                          View(await _context.Character.ToListAsync()) :
-                          Problem("Entity set 'DnDnderContext.Character'  is null.");
+            return _context.Character != null ?
+                        View(await _context.Character.ToListAsync()) :
+                        Problem("Entity set 'TavernContext.Character'  is null.");
         }
 
         // GET: Characters/Details/5
@@ -56,7 +56,7 @@ namespace DnDnder
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,name,Class,level,race,alignment")] Character character)
+        public async Task<IActionResult> Create([Bind("Id,name,Class,level,race,alignment,bio")] Character character)
         {
             if (ModelState.IsValid)
             {
@@ -88,7 +88,7 @@ namespace DnDnder
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,name,Class,level,race,alignment")] Character character)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,name,Class,level,race,alignment,bio")] Character character)
         {
             if (id != character.Id)
             {
@@ -143,21 +143,21 @@ namespace DnDnder
         {
             if (_context.Character == null)
             {
-                return Problem("Entity set 'DnDnderContext.Character'  is null.");
+                return Problem("Entity set 'TavernContext.Character'  is null.");
             }
             var character = await _context.Character.FindAsync(id);
             if (character != null)
             {
                 _context.Character.Remove(character);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool CharacterExists(int id)
         {
-          return (_context.Character?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Character?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

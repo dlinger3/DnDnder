@@ -5,16 +5,19 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using DnDnder.Data;
-using DnDnder.Models;
+using Tavern.Data.Migrations;
+using Tavern.Models;
+using System.Diagnostics;
+using Microsoft.AspNetCore.Identity;
 
-namespace DnDnder.Controllers
+namespace Tavern.Controllers
 {
     public class CampaignsController : Controller
     {
-        private readonly DnDnderContext _context;
+        private readonly ApplicationDbContext _context;
+      
 
-        public CampaignsController(DnDnderContext context)
+        public CampaignsController(ApplicationDbContext context)
         {
             _context = context;
         }
@@ -22,20 +25,20 @@ namespace DnDnder.Controllers
         // GET: Campaigns
         public async Task<IActionResult> Index()
         {
-              return _context.campaign != null ? 
-                          View(await _context.campaign.ToListAsync()) :
-                          Problem("Entity set 'DnDnderContext.campaign'  is null.");
+            return _context.Campaign != null ?
+                        View(await _context.Campaign.ToListAsync()) :
+                        Problem("Entity set 'TavernContext.Campaign'  is null.");
         }
 
         // GET: Campaigns/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.campaign == null)
+            if (id == null || _context.Campaign == null)
             {
                 return NotFound();
             }
 
-            var campaign = await _context.campaign
+            var campaign = await _context.Campaign
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (campaign == null)
             {
@@ -54,15 +57,34 @@ namespace DnDnder.Controllers
         // POST: Campaigns/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+
+        //if prefix did not work change the bind to Bind["CampaignName,WorldName,Details"]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,campaignName,worldName,details")] campaign campaign)
+        public async Task<IActionResult> Create([Bind("Id,CampaignName,WorldName,Details")] Campaign campaign)
         {
-            if (ModelState.IsValid)
+            try
             {
-                _context.Add(campaign);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                Debug.WriteLine("Attempting to create Campaign...");
+                Debug.WriteLine("id: " + campaign.Id);
+                Debug.WriteLine("CampaignName: " + campaign.CampaignName);
+                Debug.WriteLine("WorldName: " + campaign.WorldName);
+                Debug.WriteLine("Details: " + campaign.Details);
+                Debug.WriteLine("AppUserID: " + campaign.AppUserID);
+                Debug.WriteLine("AppUserExist: " + campaign.AppUser);
+                Debug.WriteLine("Attempting to create Campaign...");
+                if (ModelState.IsValid)
+                {
+                    Debug.WriteLine("Model State was valid...");
+                    _context.Add(campaign);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+            }
+            catch(InvalidDataException ide)
+            {
+                Debug.WriteLine(ide.StackTrace);
+                ModelState.AddModelError("", "Unable to save changes.");
             }
             return View(campaign);
         }
@@ -70,12 +92,12 @@ namespace DnDnder.Controllers
         // GET: Campaigns/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.campaign == null)
+            if (id == null || _context.Campaign == null)
             {
                 return NotFound();
             }
 
-            var campaign = await _context.campaign.FindAsync(id);
+            var campaign = await _context.Campaign.FindAsync(id);
             if (campaign == null)
             {
                 return NotFound();
@@ -88,7 +110,7 @@ namespace DnDnder.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,campaignName,worldName,details")] campaign campaign)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,campaignName,worldName,details")] Campaign campaign)
         {
             if (id != campaign.Id)
             {
@@ -104,7 +126,7 @@ namespace DnDnder.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!campaignExists(campaign.Id))
+                    if (!CampaignExists(campaign.Id))
                     {
                         return NotFound();
                     }
@@ -121,12 +143,12 @@ namespace DnDnder.Controllers
         // GET: Campaigns/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.campaign == null)
+            if (id == null || _context.Campaign == null)
             {
                 return NotFound();
             }
 
-            var campaign = await _context.campaign
+            var campaign = await _context.Campaign
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (campaign == null)
             {
@@ -141,23 +163,23 @@ namespace DnDnder.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.campaign == null)
+            if (_context.Campaign == null)
             {
-                return Problem("Entity set 'DnDnderContext.campaign'  is null.");
+                return Problem("Entity set 'TavernContext.Campaign'  is null.");
             }
-            var campaign = await _context.campaign.FindAsync(id);
+            var campaign = await _context.Campaign.FindAsync(id);
             if (campaign != null)
             {
-                _context.campaign.Remove(campaign);
+                _context.Campaign.Remove(campaign);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool campaignExists(int id)
+        private bool CampaignExists(int id)
         {
-          return (_context.campaign?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Campaign?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿@model DnDnder.Models.Character
+﻿@model Tavern.Models.Character
 
 @{
     ViewData["Title"] = "Create";
@@ -116,6 +116,14 @@
 					<option value="Neu_true">Neutral</option>
 				</select>
                 <span asp-validation-for="alignment" class="text-danger"></span>
+            </div>
+			<br />
+	        <br />
+	        <br />
+            <div class="form-group">
+                <label asp-for="bio" class="control-label">Name</label>
+                <textarea asp-for="bio" class="form-control" rows="10" cols="20"></textarea>
+                <span asp-validation-for="bio" class="text-danger"></span>
             </div>
 			<br />
 	        <br />

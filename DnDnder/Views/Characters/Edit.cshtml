@@ -1,4 +1,4 @@
-﻿@model DnDnder.Models.Character
+﻿@model Tavern.Models.Character
 
 @{
     ViewData["Title"] = "Edit";
@@ -38,6 +38,11 @@
                 <label asp-for="alignment" class="control-label"></label>
                 <input asp-for="alignment" class="form-control" />
                 <span asp-validation-for="alignment" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="bio" class="control-label"></label>
+                <input asp-for="bio" class="form-control" />
+                <span asp-validation-for="bio" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />

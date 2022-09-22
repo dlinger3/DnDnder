@@ -1,4 +1,4 @@
-﻿@model DnDnder.Models.campaign
+﻿@model Tavern.Models.Campaign
 
 @{
     ViewData["Title"] = "Delete";
@@ -9,26 +9,26 @@
 
 <h3>Are you sure you want to delete this?</h3>
 <div>
-    <h4>campaign</h4>
+    <h4>Campaign</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.campaignName)
+            @Html.DisplayNameFor(model => model.CampaignName)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.campaignName)
+            @Html.DisplayFor(model => model.CampaignName)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.worldName)
+            @Html.DisplayNameFor(model => model.WorldName)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.worldName)
+            @Html.DisplayFor(model => model.WorldName)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.details)
+            @Html.DisplayNameFor(model => model.Details)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.details)
+            @Html.DisplayFor(model => model.Details)
         </dd>
     </dl>
     
