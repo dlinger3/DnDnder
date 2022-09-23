@@ -5,7 +5,6 @@ namespace Tavern.Models
 {
     public class Campaign
     {
-     
         public int Id { get; set; }
         //Name given to a campaign by user
         [Required]
@@ -20,7 +19,7 @@ namespace Tavern.Models
 
         //Foreign key and AppUser that is associated with this Campaign
         [ForeignKey("AppUser")]
-        public string AppUserID  { get; set; }
-        public virtual AppUser AppUser { get; set; }
+        public string? AppUserID  { get; set; }
+        public virtual AppUser? AppUser { get; set; }
     }
 }

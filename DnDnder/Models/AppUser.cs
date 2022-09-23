@@ -24,9 +24,11 @@ namespace Tavern.Models
 {
     public class AppUser : IdentityUser
     {
-        public ICollection<Campaign> Campaigns { get; set; }
+        //Try adding an AppUser Table with a new ID field that will be used to link AppUsers to campaigns and characters
+        //Instead of trying to link it to the userID's from IdentityUser
+        public ICollection<Campaign>? Campaigns { get; set; }
 
-        public ICollection<Character> Characters { get; set; }
+        public ICollection<Character>? Characters { get; set; }
 
         public void testId()
         {

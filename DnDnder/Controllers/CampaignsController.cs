@@ -9,17 +9,21 @@ using Tavern.Data.Migrations;
 using Tavern.Models;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
 
 namespace Tavern.Controllers
 {
     public class CampaignsController : Controller
     {
         private readonly ApplicationDbContext _context;
-      
+        private readonly UserManager<AppUser> _userManager;
 
-        public CampaignsController(ApplicationDbContext context)
+
+        public CampaignsController(ApplicationDbContext context, UserManager<AppUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Campaigns
@@ -61,18 +65,26 @@ namespace Tavern.Controllers
         //if prefix did not work change the bind to Bind["CampaignName,WorldName,Details"]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,CampaignName,WorldName,Details")] Campaign campaign)
+        public async Task<IActionResult> Create([Bind("Id,CampaignName,WorldName,Details,AppUserID,AppUser")] Campaign campaign)
         {
             try
             {
-                Debug.WriteLine("Attempting to create Campaign...");
-                Debug.WriteLine("id: " + campaign.Id);
-                Debug.WriteLine("CampaignName: " + campaign.CampaignName);
-                Debug.WriteLine("WorldName: " + campaign.WorldName);
-                Debug.WriteLine("Details: " + campaign.Details);
-                Debug.WriteLine("AppUserID: " + campaign.AppUserID);
-                Debug.WriteLine("AppUserExist: " + campaign.AppUser);
-                Debug.WriteLine("Attempting to create Campaign...");
+                //TODO: Need to implement a better way to assign the ID. Try reasearching user sessions for asp.net core 6
+                string UserEmail = User.Identity.Name;              
+                var AppUser = from user in _context.Users
+                              where user.Email == UserEmail
+                              select user.Id;
+                campaign.AppUserID = AppUser.Single();
+                var errors = ModelState.Values.SelectMany(v => v.Errors);
+                if (errors.Any())
+                {
+                    errors = errors.ToList();
+                    foreach (var error in errors)
+                    {
+                        Debug.WriteLine(error);
+                        Debug.WriteLine(error.ErrorMessage);
+                    }
+                }
                 if (ModelState.IsValid)
                 {
                     Debug.WriteLine("Model State was valid...");
