@@ -15,8 +15,10 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddDefaultIdentity<AppUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
-builder.Services.AddRazorPages();
+//builder.Services.AddIdentity<AppUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
+//.AddEntityFrameworkStores<ApplicationDbContext>();
 
+builder.Services.AddRazorPages();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ApplicationDbContext") ?? throw new InvalidOperationException("Connection string 'ApplicationDbContext' not found.")));
 builder.Services.Configure<IdentityOptions>(opts =>
@@ -36,7 +38,9 @@ using (var scope = app.Services.CreateScope())
     //ServiceCollection.AddHttpContextAccessor();
     //var HttpContext = Services.GetService<IHttpContextAccessor>();
     //var User = HttpContext.HttpContext.User.FindFirst().Value;
+    
     SeedData.InitializeTables(Services);
+    
     
 }
 
