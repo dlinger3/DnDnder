@@ -21,5 +21,6 @@ namespace Tavern.Models
         [ForeignKey("AppUser")]
         public string? AppUserID  { get; set; }
         public virtual AppUser? AppUser { get; set; }
+
     }
 }

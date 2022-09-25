@@ -11,8 +11,8 @@ namespace Tavern.Data.Migrations
         {
         }
 
-
-        public DbSet<Campaign> Campaign { get; set; } = default!;
+        public DbSet<AppUser> Users { get; set; } = default!;
+        public DbSet<Campaign> Campaign { get; set; }
 
         public DbSet<Character>? Character { get; set; }
     }

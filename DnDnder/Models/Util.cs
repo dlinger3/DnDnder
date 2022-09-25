@@ -4,7 +4,7 @@ namespace Tavern.Models
 {
     public class Util
     {
-        public static void GetCurrentUser()
+        public static void GetCurrentUserID()
         {
         }
     }

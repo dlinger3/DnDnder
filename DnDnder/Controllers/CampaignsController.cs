@@ -29,9 +29,33 @@ namespace Tavern.Controllers
         // GET: Campaigns
         public async Task<IActionResult> Index()
         {
-            return _context.Campaign != null ?
-                        View(await _context.Campaign.ToListAsync()) :
-                        Problem("Entity set 'TavernContext.Campaign'  is null.");
+
+
+            /* ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+             * ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+             * ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+             * 
+             *                           !!!!!!!!!!!!!!!!!!!!!!IMPORTANT!!!!!!!!!!!!!!!!
+             * LEAVE THE CODE BELOW HERE FOR TESTING A BUG. THE ABOVE SOLUTION WORKS BUT WILL CAUSE REDUNDANT CODE THAT I THINK
+             * A BETTER SOLUTION EXIST FOR
+             * 
+             * ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+             * ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+             * ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+             */
+            if (_context.Campaign != null)
+            {
+                var userID =  User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var userCampaignSet = await _context.Campaign
+                    .Where(c => c.AppUserID.Contains(userID)).ToListAsync();
+
+                return View(userCampaignSet);
+                
+            }
+            else
+            {
+                return Problem("Entity set 'ApplicationDbContext.Campaign'  is null.");
+            }
         }
 
         // GET: Campaigns/Details/5
