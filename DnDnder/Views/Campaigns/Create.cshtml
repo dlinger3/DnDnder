@@ -1,35 +1,45 @@
-﻿@model DnDnder.Models.campaign
+﻿@model Tavern.Models.Campaign
 
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
     ViewData["Title"] = "Create";
     Layout = "~/Pages/Shared/_Layout.cshtml";
 }
 
-<h1>Create</h1>
+<h1>Campaign Creation</h1>
 
-<h4>campaign</h4>
 <hr />
-<div class="row">
+<div class="row justify-content-md-center">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-controller="Campaigns" asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="campaignName" class="control-label"></label>
-                <input asp-for="campaignName" class="form-control" />
-                <span asp-validation-for="campaignName" class="text-danger"></span>
+                @Html.HiddenFor(m => m.AppUserID)
+                <label asp-for="CampaignName" class="control-label">Campaign Name</label>
+                <input asp-for="CampaignName"  class="form-control" />
+                <span asp-validation-for="CampaignName" class="text-danger"></span>
             </div>
+            <br />
+            <br />
+            <br />
             <div class="form-group">
-                <label asp-for="worldName" class="control-label"></label>
-                <input asp-for="worldName" class="form-control" />
-                <span asp-validation-for="worldName" class="text-danger"></span>
+                <label asp-for="WorldName" class="control-label">Campaign Setting</label>
+                <input asp-for="WorldName" class="form-control" />
+                <span asp-validation-for="WorldName" class="text-danger"></span>
             </div>
+            <br />
+            <br />
+            <br />
             <div class="form-group">
-                <label asp-for="details" class="control-label"></label>
-                <input asp-for="details" class="form-control" />
-                <span asp-validation-for="details" class="text-danger"></span>
+                <label asp-for="Details" class="control-label">Campaign Details</label>
+                <textarea asp-for="Details" class="form-control" rows="10" cols="20"></textarea>
+                <span asp-validation-for="Details" class="text-danger"></span>
             </div>
+            <br />
+            <br />
+            <br />
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" class="btn btn-primary" value="Create Campaign"/>
             </div>
         </form>
     </div>

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<DnDnder.Models.campaign>
+﻿@model IEnumerable<Tavern.Models.Campaign>
 
 @{
     ViewData["Title"] = "Index";
@@ -8,19 +8,19 @@
 <h1>Index</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a href="/Campaigns/Create">Create New</a>
 </p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.campaignName)
+                @Html.DisplayNameFor(model => model.CampaignName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.worldName)
+                @Html.DisplayNameFor(model => model.WorldName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.details)
+                @Html.DisplayNameFor(model => model.Details)
             </th>
             <th></th>
         </tr>
@@ -29,13 +29,13 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.campaignName)
+                @Html.DisplayFor(modelItem => item.CampaignName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.worldName)
+                @Html.DisplayFor(modelItem => item.WorldName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.details)
+                @Html.DisplayFor(modelItem => item.Details)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

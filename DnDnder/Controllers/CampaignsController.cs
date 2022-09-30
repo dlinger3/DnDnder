@@ -5,37 +5,67 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using DnDnder.Data;
-using DnDnder.Models;
+using Tavern.Data.Migrations;
+using Tavern.Models;
+using System.Diagnostics;
+using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
 
-namespace DnDnder.Controllers
+namespace Tavern.Controllers
 {
     public class CampaignsController : Controller
     {
-        private readonly DnDnderContext _context;
+        private readonly ApplicationDbContext _context;
+        private readonly UserManager<AppUser> _userManager;
 
-        public CampaignsController(DnDnderContext context)
+
+        public CampaignsController(ApplicationDbContext context, UserManager<AppUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Campaigns
         public async Task<IActionResult> Index()
         {
-              return _context.campaign != null ? 
-                          View(await _context.campaign.ToListAsync()) :
-                          Problem("Entity set 'DnDnderContext.campaign'  is null.");
+
+
+            /* ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+             * ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+             * ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+             * 
+             *                           !!!!!!!!!!!!!!!!!!!!!!IMPORTANT!!!!!!!!!!!!!!!!
+             * LEAVE THE CODE BELOW HERE FOR TESTING A BUG. THE ABOVE SOLUTION WORKS BUT WILL CAUSE REDUNDANT CODE THAT I THINK
+             * A BETTER SOLUTION EXIST FOR
+             * 
+             * ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+             * ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+             * ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+             */
+            if (_context.Campaign != null)
+            {
+                var userID =  User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var userCampaignSet = await _context.Campaign
+                    .Where(c => c.AppUserID.Contains(userID)).ToListAsync();
+
+                return View(userCampaignSet);
+                
+            }
+            else
+            {
+                return Problem("Entity set 'ApplicationDbContext.Campaign'  is null.");
+            }
         }
 
         // GET: Campaigns/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.campaign == null)
+            if (id == null || _context.Campaign == null)
             {
                 return NotFound();
             }
 
-            var campaign = await _context.campaign
+            var campaign = await _context.Campaign
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (campaign == null)
             {
@@ -54,15 +84,43 @@ namespace DnDnder.Controllers
         // POST: Campaigns/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+
+        //if prefix did not work change the bind to Bind["CampaignName,WorldName,Details"]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,campaignName,worldName,details")] campaign campaign)
+        public async Task<IActionResult> Create([Bind("Id,CampaignName,WorldName,Details,AppUserID,AppUser")] Campaign campaign)
         {
-            if (ModelState.IsValid)
+            try
             {
-                _context.Add(campaign);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                //TODO: Need to implement a better way to assign the ID. Try reasearching user sessions for asp.net core 6
+                //string UserEmail = User.Identity.Name;              
+                //var AppUser = from user in _context.Users
+                //              where user.Email == UserEmail
+                //              select user.Id;
+                //campaign.AppUserID = AppUser.Single();
+                campaign.AppUserID = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var errors = ModelState.Values.SelectMany(v => v.Errors);
+                if (errors.Any())
+                {
+                    errors = errors.ToList();
+                    foreach (var error in errors)
+                    {
+                        Debug.WriteLine(error);
+                        Debug.WriteLine(error.ErrorMessage);
+                    }
+                }
+                if (ModelState.IsValid)
+                {
+                    Debug.WriteLine("Model State was valid...");
+                    _context.Add(campaign);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+            }
+            catch(InvalidDataException ide)
+            {
+                Debug.WriteLine(ide.StackTrace);
+                ModelState.AddModelError("", "Unable to save changes.");
             }
             return View(campaign);
         }
@@ -70,12 +128,12 @@ namespace DnDnder.Controllers
         // GET: Campaigns/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.campaign == null)
+            if (id == null || _context.Campaign == null)
             {
                 return NotFound();
             }
 
-            var campaign = await _context.campaign.FindAsync(id);
+            var campaign = await _context.Campaign.FindAsync(id);
             if (campaign == null)
             {
                 return NotFound();
@@ -88,7 +146,7 @@ namespace DnDnder.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,campaignName,worldName,details")] campaign campaign)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,campaignName,worldName,details")] Campaign campaign)
         {
             if (id != campaign.Id)
             {
@@ -104,7 +162,7 @@ namespace DnDnder.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!campaignExists(campaign.Id))
+                    if (!CampaignExists(campaign.Id))
                     {
                         return NotFound();
                     }
@@ -121,12 +179,12 @@ namespace DnDnder.Controllers
         // GET: Campaigns/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.campaign == null)
+            if (id == null || _context.Campaign == null)
             {
                 return NotFound();
             }
 
-            var campaign = await _context.campaign
+            var campaign = await _context.Campaign
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (campaign == null)
             {
@@ -141,23 +199,23 @@ namespace DnDnder.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.campaign == null)
+            if (_context.Campaign == null)
             {
-                return Problem("Entity set 'DnDnderContext.campaign'  is null.");
+                return Problem("Entity set 'TavernContext.Campaign'  is null.");
             }
-            var campaign = await _context.campaign.FindAsync(id);
+            var campaign = await _context.Campaign.FindAsync(id);
             if (campaign != null)
             {
-                _context.campaign.Remove(campaign);
+                _context.Campaign.Remove(campaign);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool campaignExists(int id)
+        private bool CampaignExists(int id)
         {
-          return (_context.campaign?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Campaign?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }
