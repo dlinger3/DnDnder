@@ -1,5 +1,5 @@
 ﻿@model Tavern.Models.Campaign
-
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
     ViewData["Title"] = "Edit";
     Layout = "~/Pages/Shared/_Layout.cshtml";
@@ -15,19 +15,19 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
-                <label asp-for="campaignName" class="control-label"></label>
-                <input asp-for="campaignName" class="form-control" />
-                <span asp-validation-for="campaignName" class="text-danger"></span>
+                <label asp-for="CampaignName" class="control-label">Campaign Name</label>
+                <input asp-for="CampaignName" class="form-control" />
+                <span asp-validation-for="CampaignName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="worldName" class="control-label"></label>
-                <input asp-for="worldName" class="form-control" />
-                <span asp-validation-for="worldName" class="text-danger"></span>
+                <label asp-for="WorldName" class="control-label">World Name</label>
+                <input asp-for="WorldName" class="form-control" />
+                <span asp-validation-for="WorldName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="details" class="control-label"></label>
-                <input asp-for="details" class="form-control" />
-                <span asp-validation-for="details" class="text-danger"></span>
+                <label asp-for="Details" class="control-label">Details</label>
+                <input asp-for="Details" class="form-control" />
+                <span asp-validation-for="Details" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />

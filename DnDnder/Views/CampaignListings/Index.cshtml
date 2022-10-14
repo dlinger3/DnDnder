@@ -2,19 +2,22 @@
 
 @{
     ViewData["Title"] = "Index";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
+<h1>Current Listings</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Campaign)
+                @Html.DisplayNameFor(model => model.Campaign.CampaignName)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Campaign.WorldName)
+            </th>
+
             <th></th>
         </tr>
     </thead>

@@ -15,6 +15,6 @@ namespace Tavern.Data.Migrations
 
         public DbSet<Character>? Character { get; set; }
 
-        public DbSet<Tavern.Models.CampaignListing> CampaignListing { get; set; }
+        public DbSet<CampaignListing> CampaignListing { get; set; }
     }
 }

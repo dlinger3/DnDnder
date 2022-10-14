@@ -15,5 +15,10 @@ namespace Tavern.Models
         public int? CampaignId { get; set; }
         public virtual Campaign? Campaign { get; set; }
 
+        //User that the CampaignListing is associated with
+        [ForeignKey("AppUser")]
+        public string? AppUserID { get; set; }
+        public virtual AppUser? AppUser { get; set; }
+
     }
 }

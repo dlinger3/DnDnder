@@ -1,53 +1,64 @@
-﻿@model Tavern.Models.Campaign
+﻿@using Microsoft.AspNetCore.Identity
+@using Tavern.Models
+@model Tavern.Models.Campaign
+@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager
 
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
     ViewData["Title"] = "Create";
     Layout = "~/Pages/Shared/_Layout.cshtml";
 }
+@if (SignInManager.IsSignedIn(User))
+{
+    <h1>Campaign Creation</h1>
 
-<h1>Campaign Creation</h1>
-
-<hr />
-<div class="row justify-content-md-center">
-    <div class="col-md-4">
-        <form asp-controller="Campaigns" asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                @Html.HiddenFor(m => m.AppUserID)
-                <label asp-for="CampaignName" class="control-label">Campaign Name</label>
-                <input asp-for="CampaignName"  class="form-control" />
-                <span asp-validation-for="CampaignName" class="text-danger"></span>
-            </div>
-            <br />
-            <br />
-            <br />
-            <div class="form-group">
-                <label asp-for="WorldName" class="control-label">Campaign Setting</label>
-                <input asp-for="WorldName" class="form-control" />
-                <span asp-validation-for="WorldName" class="text-danger"></span>
-            </div>
-            <br />
-            <br />
-            <br />
-            <div class="form-group">
-                <label asp-for="Details" class="control-label">Campaign Details</label>
-                <textarea asp-for="Details" class="form-control" rows="10" cols="20"></textarea>
-                <span asp-validation-for="Details" class="text-danger"></span>
-            </div>
-            <br />
-            <br />
-            <br />
-            <div class="form-group">
-                <input type="submit" class="btn btn-primary" value="Create Campaign"/>
-            </div>
-        </form>
+    <hr />
+    <div class="row justify-content-md-center">
+        <div class="col-md-4">
+            <form asp-controller="Campaigns" asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    @Html.HiddenFor(m => m.AppUserID)
+                    <label asp-for="CampaignName" class="control-label">Campaign Name</label>
+                    <input asp-for="CampaignName"  class="form-control" />
+                    <span asp-validation-for="CampaignName" class="text-danger"></span>
+                </div>
+                <br />
+                <br />
+                <br />
+                <div class="form-group">
+                    <label asp-for="WorldName" class="control-label">Campaign Setting</label>
+                    <input asp-for="WorldName" class="form-control" />
+                    <span asp-validation-for="WorldName" class="text-danger"></span>
+                </div>
+                <br />
+                <br />
+                <br />
+                <div class="form-group">
+                    <label asp-for="Details" class="control-label">Campaign Details</label>
+                    <textarea asp-for="Details" class="form-control" rows="10" cols="20"></textarea>
+                    <span asp-validation-for="Details" class="text-danger"></span>
+                </div>
+                <br />
+                <br />
+                <br />
+                <div class="form-group">
+                    <input type="submit" class="btn btn-primary" value="Create Campaign"/>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
 
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
+}
+else
+{
+    <h1><a href="/Areas/Identity/Pages/Account/Manage/Login">You need to be logged in to access this page</a></h1>
+}
+
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
