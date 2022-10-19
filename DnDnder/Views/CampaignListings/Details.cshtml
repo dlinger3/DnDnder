@@ -2,23 +2,65 @@
 
 @{
     ViewData["Title"] = "Details";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
 }
 
-<h1>Details</h1>
+<h1>@Html.DisplayFor(model => model.Campaign.CampaignName)</h1>
 
 <div>
-    <h4>CampaignListing</h4>
+    <h4>@Html.DisplayFor(model => model.Campaign.WorldName)</h4>
     <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Campaign)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Campaign.CampaignName)
-        </dd>
-    </dl>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Campaign Details
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    @Html.DisplayFor(model => model.Campaign.Details)
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Current Players</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if(Model.Players != null)
+            {
+                @foreach(var item in Model.Players)
+                {
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Class)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Level)
+                    </td>
+                }
+            }
+            else
+            {
+                <td>
+                    No active players currently.
+                </td>
+            }
+        </tbody>
+    </table>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+     <input type="button" class="btn btn-primary" value="Back To List" onclick="location.href='@Url.Action("Index","CampaignListings")'" />
 </div>

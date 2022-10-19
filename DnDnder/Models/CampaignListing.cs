@@ -20,5 +20,30 @@ namespace Tavern.Models
         public string? AppUserID { get; set; }
         public virtual AppUser? AppUser { get; set; }
 
+        public bool UserIsInCampaign(string UserID)
+        {
+            if(Players == null)
+            {
+                return false;
+            }
+            else
+            {
+                foreach (Character character in Players)
+                {
+                    if (character.AppUserID == UserID)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        continue;
+                    }
+                }
+
+                return false;
+            }
+            
+        }
+
     }
 }

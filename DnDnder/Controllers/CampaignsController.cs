@@ -203,7 +203,7 @@ namespace Tavern.Controllers
             {
                 return Problem("Entity set 'TavernContext.Campaign'  is null.");
             }
-            var campaignListing = await _context.CampaignListing.Where(cl => cl.CampaignId == id && cl.AppUserID == User.FindFirstValue(ClaimTypes.NameIdentifier)).FirstAsync();
+            var campaignListing = await _context.CampaignListing.Where(cl => cl.CampaignId == id && cl.AppUserID == User.FindFirstValue(ClaimTypes.NameIdentifier)).FirstOrDefaultAsync();
             if(campaignListing != null)
             {
                 _context.CampaignListing.Remove(campaignListing);
@@ -218,22 +218,15 @@ namespace Tavern.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-
         public async Task<IActionResult> ListCampaign(int id)
         {
-            CampaignListing newListing = new CampaignListing();
-            newListing.CampaignId = id;
-            newListing.AppUserID = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            Debug.WriteLine("In ListCampaign in Campaigns Controller");
 
-            if(ModelState.IsValid)
-            {
-                Debug.WriteLine("Model State was valid...");
-                _context.CampaignListing.Add(newListing);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
+            TempData["CampaignID"] = id;
+            TempData["AppUserID"] = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
             //List<CampaignListing> ListOfCampaigns = await _context.CampaignListing.ToListAsync();
-            return View("~/Views/CampaignListings/Index.cshtml");
+            return RedirectToAction("Create", "CampaignListings");
         }
 
         private bool CampaignExists(int id)

@@ -11,10 +11,10 @@ namespace Tavern.Data.Migrations
         {
         }
 
-        public DbSet<Campaign> Campaign { get; set; }
+        public DbSet<Campaign>? Campaign { get; set; }
 
         public DbSet<Character>? Character { get; set; }
 
-        public DbSet<CampaignListing> CampaignListing { get; set; }
+        public DbSet<CampaignListing>? CampaignListing { get; set; }
     }
 }

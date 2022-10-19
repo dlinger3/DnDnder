@@ -1,0 +1,64 @@
+﻿@model IEnumerable<Tavern.Models.Character>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a href="Characters/Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Class)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Level)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Race)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Alignment)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Class)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Level)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Race)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Alignment)
+            </td>
+            <td>
+                @using(Html.BeginForm("JoinCampaign","CampaignListings"))
+                {
+                <input type="hidden" name="UserID" value="@item.AppUserID" />
+                <input type="hidden" name="CharacterId" value="@item.Id" />
+                <input type="hidden" name="CampaignListingId" value= @TempData["CampaignListingId"] />
+                <input type="submit" value="Join Campaign" />
+                }
+                <a asp-action="JoinCampaign" asp-route-id="@item.Id">Join</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
