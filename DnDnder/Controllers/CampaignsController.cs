@@ -92,12 +92,6 @@ namespace Tavern.Controllers
         {
             try
             {
-                //TODO: Need to implement a better way to assign the ID. Try reasearching user sessions for asp.net core 6
-                //string UserEmail = User.Identity.Name;              
-                //var AppUser = from user in _context.Users
-                //              where user.Email == UserEmail
-                //              select user.Id;
-                //campaign.AppUserID = AppUser.Single();
                 campaign.AppUserID = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var errors = ModelState.Values.SelectMany(v => v.Errors);
                 if (errors.Any())

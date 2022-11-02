@@ -3,17 +3,19 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Tavern.Data.Migrations;
 
 #nullable disable
 
-namespace Tavern.Data.Migrations
+namespace DnDnder.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221027190843_Updated_Fields_For_MessageModel")]
+    partial class Updated_Fields_For_MessageModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -386,19 +388,17 @@ namespace Tavern.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int?>("CampaignListingID")
-                        .IsRequired()
-                        .HasColumnType("int");
-
                     b.Property<string>("MessageText")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SentBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.Property<string>("SocketId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.HasIndex("CampaignListingID");
+                    b.HasKey("Id");
 
                     b.ToTable("Message");
                 });
@@ -527,17 +527,6 @@ namespace Tavern.Data.Migrations
                     b.Navigation("CampaignListing");
 
                     b.Navigation("message");
-                });
-
-            modelBuilder.Entity("Tavern.Models.Message", b =>
-                {
-                    b.HasOne("Tavern.Models.CampaignListing", "campaignListing")
-                        .WithMany()
-                        .HasForeignKey("CampaignListingID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("campaignListing");
                 });
 
             modelBuilder.Entity("Tavern.Models.AppUser", b =>

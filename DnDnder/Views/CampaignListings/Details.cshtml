@@ -1,5 +1,6 @@
 ﻿@model Tavern.Models.CampaignListing
-
+@using Tavern.Models
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
     ViewData["Title"] = "Details";
     Layout = "~/Pages/Shared/_Layout.cshtml";
@@ -35,9 +36,9 @@
             </tr>
         </thead>
         <tbody>
-            @if(Model.Players != null)
+            @if(@ViewData["CharacterList"] != null)
             {
-                @foreach(var item in Model.Players)
+                @foreach(var item in @ViewData["CharacterList"] as List<Character>)
                 {
                     <td>
                         @Html.DisplayFor(modelItem => item.Name)
@@ -58,8 +59,34 @@
                     No active players currently.
                 </td>
             }
+            <tr>
+                <td>
+                    <input type="button" class="btn btn-primary" value="View Chat" 
+                           onclick="location.href='@Url.Action("GroupMessages","CampaignListings",new {id = @Model.Id})'" />
+                </td>
+            </tr>
         </tbody>
     </table>
+
+        <table class="table">
+        <thead>
+            <tr>
+                <th>d4</th>
+                <th>d6</th>
+                <th>d8</th>
+            </tr>
+        </thead>
+        <tbody>
+              @using(Html.BeginForm("RollDice","CampaignListings"))
+              {
+                  <input type="text" name="d4"/>
+                  <input type="text" name="d6"/>
+                  <input type="text" name="d8"/>
+                  <input type="submit" value="Roll Dice"/>
+              }
+        </tbody>
+    </table>
+
 </div>
 <div>
      <input type="button" class="btn btn-primary" value="Back To List" onclick="location.href='@Url.Action("Index","CampaignListings")'" />

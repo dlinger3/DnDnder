@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics;
 
 namespace Tavern.Models
 {
@@ -7,7 +8,7 @@ namespace Tavern.Models
     {
         public int Id { get; set; }
 
-        //Collection of players in the campaign
+        //Forms a M:M relationship between Characters and CampaignListings
         public ICollection<Character>? Players { get; set; }
 
         //Foreign key for Campaign that is associated with this CampaignListing
@@ -20,29 +21,18 @@ namespace Tavern.Models
         public string? AppUserID { get; set; }
         public virtual AppUser? AppUser { get; set; }
 
-        public bool UserIsInCampaign(string UserID)
+        public bool UserIsInCampaign(Dictionary<string, int> PlayerListingsMap, int? ListingID, string? UserID)
         {
-            if(Players == null)
+            string key = UserID + "--" + ListingID;
+            if (PlayerListingsMap.ContainsKey(key))
             {
-                return false;
+                return true;
             }
             else
             {
-                foreach (Character character in Players)
-                {
-                    if (character.AppUserID == UserID)
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        continue;
-                    }
-                }
-
                 return false;
             }
-            
+                
         }
 
     }

@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Tavern.Data.Migrations;
 using Tavern.Models;
 using System.Security.Claims;
+using Tavern.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +13,8 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+//Adds service for realtime chat functionality via SignalR api
+builder.Services.AddSignalR();
 
 builder.Services.AddDefaultIdentity<AppUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
@@ -33,12 +36,7 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var Services = scope.ServiceProvider;
-    //TODO: current work in progress. Trying to get current Users ID to test some things. The current Users ID
-    //TODO: is not getting assocaited with a campaign. 
-   // var ServiceCollection = Services.GetService<IServiceCollection>();
-    //ServiceCollection.AddHttpContextAccessor();
-    //var HttpContext = Services.GetService<IHttpContextAccessor>();
-    //var User = HttpContext.HttpContext.User.FindFirst().Value;
+
     
     SeedData.InitializeTables(Services);
 
@@ -71,5 +69,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapRazorPages();
+app.MapHub<ChatHub>("/ChatHub");
 
 app.Run();

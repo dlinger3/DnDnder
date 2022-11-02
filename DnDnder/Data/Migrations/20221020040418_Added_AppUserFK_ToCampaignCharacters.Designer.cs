@@ -3,17 +3,19 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Tavern.Data.Migrations;
 
 #nullable disable
 
-namespace Tavern.Data.Migrations
+namespace DnDnder.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221020040418_Added_AppUserFK_ToCampaignCharacters")]
+    partial class Added_AppUserFK_ToCampaignCharacters
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -354,55 +356,6 @@ namespace Tavern.Data.Migrations
                     b.ToTable("Character");
                 });
 
-            modelBuilder.Entity("Tavern.Models.ListingChatGroup", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int?>("CampaignListingID")
-                        .IsRequired()
-                        .HasColumnType("int");
-
-                    b.Property<int?>("MessageID")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CampaignListingID");
-
-                    b.HasIndex("MessageID");
-
-                    b.ToTable("ListingChatGroups");
-                });
-
-            modelBuilder.Entity("Tavern.Models.Message", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int?>("CampaignListingID")
-                        .IsRequired()
-                        .HasColumnType("int");
-
-                    b.Property<string>("MessageText")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SentBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CampaignListingID");
-
-                    b.ToTable("Message");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -510,34 +463,6 @@ namespace Tavern.Data.Migrations
                         .HasForeignKey("CampaignListingId");
 
                     b.Navigation("AppUser");
-                });
-
-            modelBuilder.Entity("Tavern.Models.ListingChatGroup", b =>
-                {
-                    b.HasOne("Tavern.Models.CampaignListing", "CampaignListing")
-                        .WithMany()
-                        .HasForeignKey("CampaignListingID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Tavern.Models.Message", "message")
-                        .WithMany()
-                        .HasForeignKey("MessageID");
-
-                    b.Navigation("CampaignListing");
-
-                    b.Navigation("message");
-                });
-
-            modelBuilder.Entity("Tavern.Models.Message", b =>
-                {
-                    b.HasOne("Tavern.Models.CampaignListing", "campaignListing")
-                        .WithMany()
-                        .HasForeignKey("CampaignListingID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("campaignListing");
                 });
 
             modelBuilder.Entity("Tavern.Models.AppUser", b =>

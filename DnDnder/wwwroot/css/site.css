@@ -71,7 +71,8 @@ body {
 }
 
 .logoText {
-    font-size: xx-large;
+    font-family: Copperplate, Papyrus, fantasy;
+    font-size: 50px;
     color: #b30000;
 }
 

@@ -22,9 +22,12 @@ namespace Tavern.Models
         [MaxLength(5000)]
         public string Bio { get; set; }
 
-        //Foreign key and AppUser that is associated with this Campaign
+        //Foreign key and AppUser that is associated with this Character
         [ForeignKey("AppUser")]
         public string? AppUserID { get; set; }
         public virtual AppUser? AppUser { get; set; }
+
+        //Forms a M:M relationship between Characters and CampaignListings
+        //public ICollection<CampaignListing>? PlayerCampaigns { get; set; }
     }
 }

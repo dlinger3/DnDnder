@@ -3,17 +3,19 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Tavern.Data.Migrations;
 
 #nullable disable
 
-namespace Tavern.Data.Migrations
+namespace DnDnder.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221025171754_Created_Tables_For_ChatGroups")]
+    partial class Created_Tables_For_ChatGroups
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -386,7 +388,7 @@ namespace Tavern.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int?>("CampaignListingID")
+                    b.Property<int?>("ListingChapGroupID")
                         .IsRequired()
                         .HasColumnType("int");
 
@@ -398,9 +400,10 @@ namespace Tavern.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CampaignListingID");
+                    b.HasIndex("ListingChapGroupID")
+                        .IsUnique();
 
-                    b.ToTable("Message");
+                    b.ToTable("Messages");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -531,13 +534,13 @@ namespace Tavern.Data.Migrations
 
             modelBuilder.Entity("Tavern.Models.Message", b =>
                 {
-                    b.HasOne("Tavern.Models.CampaignListing", "campaignListing")
-                        .WithMany()
-                        .HasForeignKey("CampaignListingID")
+                    b.HasOne("Tavern.Models.ListingChatGroup", "ListingChatGroup")
+                        .WithOne()
+                        .HasForeignKey("Tavern.Models.Message", "ListingChapGroupID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("campaignListing");
+                    b.Navigation("ListingChatGroup");
                 });
 
             modelBuilder.Entity("Tavern.Models.AppUser", b =>

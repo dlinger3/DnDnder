@@ -24,7 +24,17 @@ namespace Tavern.Controllers
         // GET: CampaignListings
         public async Task<IActionResult> Index()
         {
-            ViewBag.AppUserID = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            //Stores values needed for determine if/how the user is assocaited with a campaign listing
+            var UserID = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            ViewBag.AppUserID = UserID;
+            ViewBag.ListingsMap = await _context.CampaignCharacters
+                .Where(uID => uID.AppUserID.Equals(UserID))
+                .ToDictionaryAsync(
+                        //Dicitonary Key
+                        k => k.AppUserID +"--" +k.CampaignListingID.ToString(), 
+                        //Dictionary Value
+                        v => (int)v.CampaignListingID);
+
             var applicationDbContext = _context.CampaignListing.Include(c => c.Campaign);
             return View(await applicationDbContext.ToListAsync());
         }
@@ -43,6 +53,20 @@ namespace Tavern.Controllers
             if (campaignListing == null)
             {
                 return NotFound();
+            }
+
+            var CampaignCharactersSet = await _context.CampaignCharacters
+                .Where(cl => cl.CampaignListingID.Equals(id)).ToListAsync();
+
+            List<Character> Players = new List<Character>();
+            foreach(var player in CampaignCharactersSet)
+            {
+                Players.Add(
+                    await _context.Character.Where(c => c.Id.Equals(player.CharacterID) && c.AppUserID.Equals(player.AppUserID)).FirstAsync());
+            }
+            if(Players.Any())
+            {
+                ViewData["CharacterList"] = Players;
             }
 
             return View(campaignListing);
@@ -225,6 +249,65 @@ namespace Tavern.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+       
+        [HttpGet]
+        public async Task<ActionResult> GroupMessages(int? id)
+        {
+            //Used to set the character name of the current user to TempData["ThisPlayer"]. This is used to display who post a message in the listings chat. 
+            string UserCharacterName ="";
+
+            if (id == null || _context.ListingChatGroups == null)
+            {
+                return NotFound();
+            }
+            List<Message> AllMessages = new List<Message>();
+
+            //LINQ (query) to the DB for all ListingChatGroups for the given id 
+            var GroupMessages = await _context.Message
+                .Where(cg => cg.CampaignListingID
+                .Equals(id))
+                .ToListAsync();
+            
+
+            CampaignListing Listing = await _context.CampaignListing.FindAsync(id);
+            List<CampaignCharacters> ListingCharacters = await _context.CampaignCharacters.Where(clc => clc.CampaignListingID.Equals(id)).ToListAsync();
+            List<Character> characters = new List<Character>();
+
+            //Gathers all of the player characters in this listing to be stored in ViewData["Players"]
+            foreach (var ListingCharacter in ListingCharacters)
+            {
+                
+                Character character = await _context.Character
+                    .Where(c => c.Id
+                    .Equals(ListingCharacter.CharacterID)
+                    && c.AppUserID
+                    .Equals(ListingCharacter.AppUserID))
+                    .FirstAsync();
+
+
+                //TODO: Need to add ability for the creater (DM) of the CampaignListing to get added here as well. Ability
+                //TODO: for DM to provide a name for themself needs to be added or something similar?
+                if (ListingCharacter.AppUserID.Equals(User.FindFirstValue(ClaimTypes.NameIdentifier)))
+                {
+
+                    UserCharacterName = character.Name;
+                }
+
+                characters.Add(character);
+            }
+            
+            TempData["ListingID"] = id;
+            TempData["UserID"] = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            //TODO: Add DM ability for DM to provide a name to show up in the chat members list
+            // TempData["DM"] = Listing.DMName; 
+            ViewData["Players"] = characters;
+            TempData["ThisCharacter"] = UserCharacterName;
+            //ViewBag["ListingGroupID"];
+            ViewData["AllMessages"] = GroupMessages;
+
+            return View();
+        }
+
         public async Task<ActionResult> LeaveCampaign(string UserID, int CampaignListingId)
         {
             if (_context.Character != null)
@@ -262,33 +345,24 @@ namespace Tavern.Controllers
         }
 
 
-        /**
-         * 
-         * 
-         * 
-         * VISIT THIS PAGE FOR POSSIBLE SOLUTION TO THIS. NEED TO POSSIBLY ALTER ApplicationDbContext OnModelCreating() 
-         * https://stackoverflow.com/questions/70236977/asp-net-core-model-with-a-collectionstring
-         * 
-         * 
-         */
         [HttpPost]
-        public async Task<ActionResult> JoinCampaign(string UserID, int CharacterID, int CampaignListingID)
+        public async Task<ActionResult> JoinCampaign(string UserID, int CharaID, int ListingID)
         {
-           if(UserID != null && CharacterID != null && CampaignListingID != null)
+           if(UserID != null && CharaID != null && ListingID != null)
             {
-                var CampaignListing = await _context.CampaignListing.Where(cl => cl.Id.Equals(CampaignListingID)).FirstOrDefaultAsync();
-                var NewPlayer = await _context.Character.FindAsync(CharacterID);
-                if (NewPlayer != null)
+                var CampaignListing = await _context.CampaignListing.FindAsync(ListingID);
+                var NewPlayer = await _context.Character.FindAsync(CharaID);
+                if (NewPlayer != null && CampaignListing != null)
                 {
-                    if(CampaignListing.Players == null)
+                    CampaignCharacters NewCampaignCharacter = new CampaignCharacters()
                     {
-                        CampaignListing.Players = new List<Character>();
-                        CampaignListing.Players.Add(NewPlayer);
-                    }
-                    else
-                    {
-                        CampaignListing.Players.Add(NewPlayer);
-                    }
+                        CampaignListingID = ListingID,
+                        CharacterID = CharaID,
+                        AppUserID = UserID
+                    };
+                    
+                    _context.CampaignCharacters.Add(NewCampaignCharacter);
+                    _context.SaveChanges();
                     
 
                     var UpdatedListing = await _context.CampaignListing.ToListAsync();
@@ -307,13 +381,13 @@ namespace Tavern.Controllers
         }
 
 
-        public async Task<ActionResult> JoinCampaignReroute(string UserID, int CampaignListingId)
+        public async Task<ActionResult> JoinCampaignReroute(int CampaignListingId)
         {
             if (_context.Character != null)
             {
+                var UserID = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 //var userCharacterSet = await _context.Character
                 //    .Where(c => c.AppUserID.Contains(userID)).ToListAsync();
-
                 var userCharacterSet = await _context.Character.Where(ch => ch.AppUserID.Contains(UserID)).ToListAsync();
                 TempData["CampaignListingID"] = CampaignListingId;
                 return View(userCharacterSet);
@@ -332,6 +406,11 @@ namespace Tavern.Controllers
             return _context.CampaignListing.Any(e => e.Id == id);
         }
 
+
+        public void RollDice(string d4, string d6, string d8)
+        {
+            Debug.WriteLine("Input is: " + d4 +"," + d6 +","+ d8);
+        }
 
     }
 }

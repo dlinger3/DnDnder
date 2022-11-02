@@ -1,0 +1,106 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using Tavern.Models
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@inject UserManager<AppUser> UserManager
+@{
+        Layout = "~/Pages/Shared/_Layout.cshtml";
+ }
+<!doctype html>
+<html lang="en">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
+        <title>Listing Group Chat</title>
+        <script>
+            //Prepares the URL's to be used in the Ajax POST and GET request by using ASP.nets built in routing utility
+            var GetURL = {
+                ActionControllerURL: '@Url.Action("GetAllMessages","Chat", new {id = @TempData["ListingID"]})'
+            };
+            var PostURL = {
+                ActionControllerURL: '@Url.Action("Create","Chat", new {id = @TempData["ListingID"]})'
+            };
+        </script>
+        <style type="text/css">
+           .group {
+              padding: 13px;
+              border-radius: 12px;
+              background: rgb(228, 76, 76);
+              margin: 5px 0px;
+              font-weight: bolder;
+              color: black;
+              cursor: pointer;
+           }
+          .chat_body {
+            height: 520px;
+            overflow: scroll;
+          }
+
+          .less_padding {
+            padding: 2px;
+          }
+          .chat_message {
+              padding: 13px;
+              border-radius: 12px;
+              width: 50%;
+              background: #85C1E9;
+              margin: 6px 4px;
+          }
+          .chat_main {
+            background-color: #e6e6e6; 
+            height: 520; 
+            padding: 0px;
+          }
+          .group_main {
+             background-color: rgba(228, 76, 76, 50%);
+          }
+        </style>
+    </head>
+    <body>
+        <h3 class="text-center" id="CampaignNameHeader"></h3>
+            <div class="container" style="background-color: grey;">
+                  <div class="row">
+                    <div class="col-md-2 less_padding">
+                      <div class="col group_main">
+                           <div class="text-center"> Players </div>
+                            <div style="height: 500px;overflow: scroll;" id="groups"> 
+                                <!--TODO:CHANGE THE VALUE FOR THIS HIDDEN INPUT-->
+                                <input type="hidden" value="test" id="currentGroup"/>
+                                @foreach (var PlayerCharacter in (dynamic)ViewData["Players"] as List<Character>) {
+                                    <div class="group"> @PlayerCharacter.Name </div> 
+                                }
+                            </div>
+                      </div>
+                    </div>
+                    <div class="col-md-10 less_padding">
+                      <div class="col-md-12 chat_main">
+                           <div class="chat_body" id="ChatBody">
+                               <!-- List of Messages will display here-->
+                                @foreach (var message in (dynamic)ViewData["AllMessages"] as List<Message>) {
+                                <div class="row chat_message"><b>@message.SentBy: </b>&nbsp;@message.MessageText </div>
+                                }
+                           </div>
+                          <div class="row container" style="margin-left: 3px;">
+                            <div class="col-md-9 col-sm-9 less_padding">
+                                <textarea class="form-control" rows="1" id="MessageInput"></textarea>   
+                            </div>
+                            <div class="col-md-3 col-sm-3 less_padding">
+                                  <input type="hidden" value=@TempData["ThisCharacter"] id="MessageSentBy"/>
+                                  <input type="hidden" value=@TempData["ListingID"] id="ListingID"/>
+                                  <input type="hidden" value=@TempData["UserID"] id="UserID"/>
+                                  <button type="button" class="btn btn-primary" style=" position: absolute;" id="SendMessage">Send Message</button>
+                            </div>
+                          </div>
+                      </div>
+                   </div>
+               </div>
+            </div>
+    </body>
+        <script src="/lib/jquery/dist/jquery.min.js"></script>  
+        <script src="/js/signalr/dist/browser/signalr.js"></script>
+        <script src="/js/chat.js"></script>
+        <script src="/js/site.js" asp-append-version="true"></script>
+</html>

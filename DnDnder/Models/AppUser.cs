@@ -30,9 +30,5 @@ namespace Tavern.Models
 
         public ICollection<Character>? Characters { get; set; }
 
-        public void testId()
-        {
-            Debug.WriteLine("ID OF CURRENT USER: " + Id);
-        }
     }
 }

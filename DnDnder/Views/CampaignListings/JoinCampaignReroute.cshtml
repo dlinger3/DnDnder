@@ -7,7 +7,7 @@
 <h1>Index</h1>
 
 <p>
-    <a href="Characters/Create">Create New</a>
+    <a href="/Characters/Create">Create New</a>
 </p>
 <table class="table">
     <thead>
@@ -51,11 +51,10 @@
                 @using(Html.BeginForm("JoinCampaign","CampaignListings"))
                 {
                 <input type="hidden" name="UserID" value="@item.AppUserID" />
-                <input type="hidden" name="CharacterId" value="@item.Id" />
-                <input type="hidden" name="CampaignListingId" value= @TempData["CampaignListingId"] />
+                <input type="hidden" name="CharaID" value="@item.Id" />
+                <input type="hidden" name="ListingID" value= @TempData["CampaignListingID"] />
                 <input type="submit" value="Join Campaign" />
                 }
-                <a asp-action="JoinCampaign" asp-route-id="@item.Id">Join</a>
             </td>
         </tr>
 }
