@@ -39,7 +39,7 @@ namespace Tavern.Controllers
             return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: CampaignListings/Details/5
+        // GET: CampaignListings/Details/id
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.CampaignListing == null)
@@ -61,8 +61,8 @@ namespace Tavern.Controllers
             List<Character> Players = new List<Character>();
             foreach(var player in CampaignCharactersSet)
             {
-                Players.Add(
-                    await _context.Character.Where(c => c.Id.Equals(player.CharacterID) && c.AppUserID.Equals(player.AppUserID)).FirstAsync());
+                Character nextCharacter = await _context.Character.Where(c => c.Id.Equals(player.CharacterID)).FirstAsync();
+                Players.Add(nextCharacter);
             }
             if(Players.Any())
             {
@@ -75,67 +75,9 @@ namespace Tavern.Controllers
         // GET: CampaignListings/Create
         public IActionResult Create()
         {
-            //var campaignid = (int)tempdata["campaignid"];
-            //var userid = tempdata["appuserid"] as string;
-            //campaignlisting newlisting = new campaignlisting()
-            //{
-            //    campaignid = campaignid,
-            //    appuserid = userid
-            //};
-            //return RedirectToAction(Create(newListing));
+            
             return View();
-            //return Content("<form action='actionname' id='frmTest' method='post'><input type='hidden' name='someValue' value='" + someValue + "' /><input type='hidden' name='anotherValue' value='" + anotherValue + "' /></form><script>document.getElementById('frmTest').submit();</script>");
         }
-
-        // POST: CampaignListings/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Create(int id)
-        //{
-        //    Debug.WriteLine("Entered Create function for Campaign Listing");
-
-        //    var userid = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        //    CampaignListing newlisting = new CampaignListing()
-        //    {
-        //        CampaignId = id,
-        //        AppUserID = userid
-        //    };
-        //    if (ModelState.IsValid)
-        //    {
-        //        _context.Add(newlisting);
-        //        await _context.SaveChangesAsync();
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    //ViewData["CampaignId"] = new SelectList(_context.Campaign, "Id", "CampaignName", campaignListing.CampaignId);
-        //    return RedirectToAction(nameof(Index));
-        //}
-
-
-        // POST: CampaignListings/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Create(int id, [Bind("Id,CampaignId,AppUserID")] CampaignListing campaignListing, [FromBody] Campaign campaign)
-        //{
-        //    Debug.WriteLine("Entered Create function for Campaign Listing, attempting to add id: " + id);
-        //    CampaignListing newListing = new CampaignListing()
-        //    {
-        //        CampaignId = id,
-        //        AppUserID = User.FindFirstValue(ClaimTypes.NameIdentifier)
-        //    };
-
-        //    if (ModelState.IsValid)
-        //    {
-        //        _context.CampaignListing.Add(newListing);
-        //        await _context.SaveChangesAsync();
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    //ViewData["CampaignId"] = new SelectList(_context.Campaign, "Id", "CampaignName", campaignListing.CampaignId);
-        //    return RedirectToAction(nameof(Index));
-        //}
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -158,7 +100,7 @@ namespace Tavern.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: CampaignListings/Edit/5
+        // GET: CampaignListings/Edit/id
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.CampaignListing == null)
@@ -175,7 +117,7 @@ namespace Tavern.Controllers
             return View(campaignListing);
         }
 
-        // POST: CampaignListings/Edit/5
+        // POST: CampaignListings/Edit/id
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -211,7 +153,7 @@ namespace Tavern.Controllers
             return View(campaignListing);
         }
 
-        // GET: CampaignListings/Delete/5
+        // GET: CampaignListings/Delete/id
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.CampaignListing == null)
@@ -230,7 +172,7 @@ namespace Tavern.Controllers
             return View(campaignListing);
         }
 
-        // POST: CampaignListings/Delete/5
+        // POST: CampaignListings/Delete/id
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -270,6 +212,7 @@ namespace Tavern.Controllers
             
 
             CampaignListing Listing = await _context.CampaignListing.FindAsync(id);
+            Campaign campaign = await _context.Campaign.FindAsync(Listing.CampaignId);
             List<CampaignCharacters> ListingCharacters = await _context.CampaignCharacters.Where(clc => clc.CampaignListingID.Equals(id)).ToListAsync();
             List<Character> characters = new List<Character>();
 
@@ -298,50 +241,59 @@ namespace Tavern.Controllers
             
             TempData["ListingID"] = id;
             TempData["UserID"] = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            TempData["ThisCharacter"] = UserCharacterName;
             //TODO: Add DM ability for DM to provide a name to show up in the chat members list
             // TempData["DM"] = Listing.DMName; 
-            ViewData["Players"] = characters;
-            TempData["ThisCharacter"] = UserCharacterName;
-            //ViewBag["ListingGroupID"];
-            ViewData["AllMessages"] = GroupMessages;
+            TempData["Players"] = characters;
+            TempData["CampaignName"] = campaign.CampaignName;
+            TempData["AllMessages"] = GroupMessages;
 
             return View();
         }
 
-        public async Task<ActionResult> LeaveCampaign(string UserID, int CampaignListingId)
+        [HttpGet]
+        public async Task<IActionResult> LeaveCampaign(int? id)
         {
-            if (_context.Character != null)
+
+            if (id == null || _context.CampaignListing == null)
             {
-                //var userCharacterSet = await _context.Character
-                //    .Where(c => c.AppUserID.Contains(userID)).ToListAsync();
-                var campaignListing = await _context.CampaignListing.Where(cl => cl.Id.Equals(CampaignListingId)).FirstOrDefaultAsync();  
-                var userCharacterSet = await _context.Character.Where(ch => ch.AppUserID.Contains(UserID)).ToListAsync();
-                if (userCharacterSet != null && campaignListing != null)
+                return NotFound();
+            }
+
+            var campaignListing = await _context.CampaignListing
+                .Include(c => c.Campaign)
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (campaignListing == null)
+            {
+                return NotFound();
+            }
+            TempData["CampaignName"] = campaignListing.Campaign.CampaignName;
+            return View(campaignListing);
+        }
+
+        /// <param name = "id"> argument is the campaign listing id. 
+        [HttpPost, ActionName("LeaveCampaign")]
+        public async Task<ActionResult> LeaveCampaignConfirmed(int id)
+        {
+            if (_context.CampaignCharacters != null)
+            {
+                var UserID = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var CampaignCharacterSet = await _context.CampaignCharacters.Where(cC => cC.CampaignListingID.Equals(id)).ToListAsync();
+                foreach(var character in CampaignCharacterSet)
                 {
-                    var playerList = campaignListing.Players;
-                    if(playerList != null)
+                    if(character.AppUserID.Equals(UserID))
                     {
-                        foreach (var player in playerList)
-                        {
-                            if (userCharacterSet.Contains(player))
-                            {
-                                _context.Remove(player);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        return NotFound();
+                        _context.Remove(character);
+                        await _context.SaveChangesAsync();
+                        return RedirectToAction(nameof(Index));
                     }
                 }
-                return View(userCharacterSet);
-
             }
             else
             {
                 return Problem("Entity set 'ApplicationDbContext.Character'  is null.");
             }
-            return View();
+            return NotFound();
         }
 
 
@@ -386,8 +338,6 @@ namespace Tavern.Controllers
             if (_context.Character != null)
             {
                 var UserID = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                //var userCharacterSet = await _context.Character
-                //    .Where(c => c.AppUserID.Contains(userID)).ToListAsync();
                 var userCharacterSet = await _context.Character.Where(ch => ch.AppUserID.Contains(UserID)).ToListAsync();
                 TempData["CampaignListingID"] = CampaignListingId;
                 return View(userCharacterSet);

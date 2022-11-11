@@ -48,7 +48,9 @@ namespace Tavern.Controllers
             }
 
             var character = await _context.Character
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(c => c.Id
+                .Equals(id));
+
             if (character == null)
             {
                 return NotFound();
@@ -99,6 +101,7 @@ namespace Tavern.Controllers
             }
 
             var character = await _context.Character.FindAsync(id);
+
             if (character == null)
             {
                 return NotFound();

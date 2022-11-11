@@ -9,12 +9,11 @@
 <!doctype html>
 <html lang="en">
     <head>
-        <!-- Required meta tags -->
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <!-- Bootstrap CSS -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
-        <title>Listing Group Chat</title>
+        <link rel="stylesheet" href="/lib/bootstrap/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="/css/chat.css"
+        <title>@ViewData["CampaignName"] Group Chat</title>
         <script>
             //Prepares the URL's to be used in the Ajax POST and GET request by using ASP.nets built in routing utility
             var GetURL = {
@@ -24,40 +23,6 @@
                 ActionControllerURL: '@Url.Action("Create","Chat", new {id = @TempData["ListingID"]})'
             };
         </script>
-        <style type="text/css">
-           .group {
-              padding: 13px;
-              border-radius: 12px;
-              background: rgb(228, 76, 76);
-              margin: 5px 0px;
-              font-weight: bolder;
-              color: black;
-              cursor: pointer;
-           }
-          .chat_body {
-            height: 520px;
-            overflow: scroll;
-          }
-
-          .less_padding {
-            padding: 2px;
-          }
-          .chat_message {
-              padding: 13px;
-              border-radius: 12px;
-              width: 50%;
-              background: #85C1E9;
-              margin: 6px 4px;
-          }
-          .chat_main {
-            background-color: #e6e6e6; 
-            height: 520; 
-            padding: 0px;
-          }
-          .group_main {
-             background-color: rgba(228, 76, 76, 50%);
-          }
-        </style>
     </head>
     <body>
         <h3 class="text-center" id="CampaignNameHeader"></h3>
@@ -68,8 +33,8 @@
                            <div class="text-center"> Players </div>
                             <div style="height: 500px;overflow: scroll;" id="groups"> 
                                 <!--TODO:CHANGE THE VALUE FOR THIS HIDDEN INPUT-->
-                                <input type="hidden" value="test" id="currentGroup"/>
-                                @foreach (var PlayerCharacter in (dynamic)ViewData["Players"] as List<Character>) {
+                                 <!--<input type="hidden" value="test" id="currentGroup"/>-->
+                                @foreach (var PlayerCharacter in (dynamic)TempData["Players"] as List<Character>) {
                                     <div class="group"> @PlayerCharacter.Name </div> 
                                 }
                             </div>
@@ -79,7 +44,7 @@
                       <div class="col-md-12 chat_main">
                            <div class="chat_body" id="ChatBody">
                                <!-- List of Messages will display here-->
-                                @foreach (var message in (dynamic)ViewData["AllMessages"] as List<Message>) {
+                                @foreach (var message in (dynamic)TempData["AllMessages"] as List<Message>) {
                                 <div class="row chat_message"><b>@message.SentBy: </b>&nbsp;@message.MessageText </div>
                                 }
                            </div>
@@ -97,6 +62,30 @@
                       </div>
                    </div>
                </div>
+            </div>
+            <br />
+            <br />
+            <br />
+            <br />
+            <div>
+                <table class="table">
+                    <thead class="">
+                        <tr>
+                            <th>d4</th>
+                            <th>d6</th>
+                            <th>d8</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @using(Html.BeginForm("RollDice","CampaignListings"))
+                        {
+                            <input type="text" name="d4"/>
+                            <input type="text" name="d6"/>
+                            <input type="text" name="d8"/>
+                            <input type="submit" value="Roll Dice"/>
+                        }
+                    </tbody>
+                </table>
             </div>
     </body>
         <script src="/lib/jquery/dist/jquery.min.js"></script>  

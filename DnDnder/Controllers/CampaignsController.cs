@@ -28,20 +28,6 @@ namespace Tavern.Controllers
         // GET: Campaigns
         public async Task<IActionResult> Index()
         {
-
-
-            /* ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-             * ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-             * ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-             * 
-             *                           !!!!!!!!!!!!!!!!!!!!!!IMPORTANT!!!!!!!!!!!!!!!!
-             * LEAVE THE CODE BELOW HERE FOR TESTING A BUG. THE ABOVE SOLUTION WORKS BUT WILL CAUSE REDUNDANT CODE THAT I THINK
-             * A BETTER SOLUTION EXIST FOR
-             * 
-             * ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-             * ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-             * ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-             */
             if (_context.Campaign != null)
             {
                 var userID =  User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -84,8 +70,6 @@ namespace Tavern.Controllers
         // POST: Campaigns/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-
-        //if prefix did not work change the bind to Bind["CampaignName,WorldName,Details"]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,CampaignName,WorldName,Details,AppUserID,AppUser")] Campaign campaign)
@@ -197,10 +181,13 @@ namespace Tavern.Controllers
             {
                 return Problem("Entity set 'TavernContext.Campaign'  is null.");
             }
-            var campaignListing = await _context.CampaignListing.Where(cl => cl.CampaignId == id && cl.AppUserID == User.FindFirstValue(ClaimTypes.NameIdentifier)).FirstOrDefaultAsync();
+            var campaignListing = await _context.CampaignListing.Where(cl => cl.CampaignId == id && cl.AppUserID == User.FindFirstValue(ClaimTypes.NameIdentifier)).ToListAsync();
             if(campaignListing != null)
             {
-                _context.CampaignListing.Remove(campaignListing);
+                foreach(var listing in campaignListing)
+                {
+                    _context.CampaignListing.Remove(listing);
+                }
             }
 
             var campaign = await _context.Campaign.FindAsync(id);

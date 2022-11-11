@@ -7,72 +7,75 @@
 
 <h1>Current Listings</h1>
 
+<html>
+    <body>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Campaign.CampaignName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Campaign.WorldName)
+                    </th>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Campaign.CampaignName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Campaign.WorldName)
-            </th>
-
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            @if(@ViewBag.AppUserID == @item.AppUserID)
-            {
-                <td>
-                    @Html.DisplayFor(modelItem => item.Campaign.CampaignName)
-                </td>
-                <td>
-                    <input type="button" class="btn btn-primary" value="Details" 
-                           onclick="location.href='@Url.Action("Details","CampaignListings",new {id = @item.Id})'" /> |
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model) {
+                        <tr>
+                            @if(@ViewBag.AppUserID == @item.AppUserID)
+                            {
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Campaign.CampaignName)
+                                </td>
+                                <td>
+                                    <input type="button" class="btn btn-primary" value="Details" 
+                                           onclick="location.href='@Url.Action("Details","CampaignListings",new {id = @item.Id})'" /> |
                     
-                    <input type="button" class="btn btn-primary" value="Edit" 
-                           onclick="location.href='@Url.Action("Edit","CampaignListings",new {id = @item.Id})'" /> |
+                                    <input type="button" class="btn btn-primary" value="Edit" 
+                                           onclick="location.href='@Url.Action("Edit","CampaignListings",new {id = @item.Id})'" /> |
 
-                    <input type="button" class="btn btn-primary" value="Delete" 
-                           onclick="location.href='@Url.Action("Delete", "CampaignListings",new {id = @item.Id})'" />
+                                    <input type="button" class="btn btn-primary" value="Delete" 
+                                           onclick="location.href='@Url.Action("Delete", "CampaignListings",new {id = @item.Id})'" />
 
-                </td>
-            }
-            else if(@item.UserIsInCampaign(@ViewBag.ListingsMap, @item.Id, @ViewBag.AppUserID))
-            {
-                <td>
-                    @Html.DisplayFor(modelItem => item.Campaign.CampaignName)
-                </td>
-                <td>
-                    <input type="button" class="btn btn-primary" value="Details" 
-                           onclick="location.href='@Url.Action("Details","CampaignListings",new {id = @item.Id})'" /> |
+                                </td>
+                            }
+                            else if(@item.UserIsInCampaign(@ViewBag.ListingsMap, @item.Id, @ViewBag.AppUserID))
+                            {
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Campaign.CampaignName)
+                                </td>
+                                <td>
+                                    <input type="button" class="btn btn-primary" value="Details" 
+                                           onclick="location.href='@Url.Action("Details","CampaignListings",new {id = @item.Id})'" /> |
 
-                    <input type="button" class="btn btn-primary" value="Leave Campaign" 
-                           onclick="location.href='@Url.Action("LeaveCampaign","CampaignListings",new {id = @item.Id})'" />
-                </td>
-            }
-            else
-            {
-                <td>
-                    @Html.DisplayFor(modelItem => item.Campaign.CampaignName)
-                </td>
-                <td>
-                    <input type="button" class="btn btn-primary" value="Details" 
-                           onclick="location.href='@Url.Action("Details","CampaignListings",new {id = @item.Id})'" /> |
-                    <div class="form-group">
+                                    <input type="button" class="btn btn-danger" value="Leave Campaign" 
+                                           onclick="location.href='@Url.Action("LeaveCampaign","CampaignListings",new {id = @item.Id})'" />
+                                </td>
+                            }
+                            else
+                            {
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Campaign.CampaignName)
+                                </td>
+                                <td>
+                                    
+                                    <!--<div class="form-group">-->
                         
-                        @using(@Html.BeginForm("JoinCampaignReroute", "CampaignListings"))
-                        {
-                            <input type="hidden" name="CampaignListingID" value="@item.Id" />
-                            <input type="submit" class="btn btn-primary" value="Join Campaign" />
-                        }
-                    </div>
-                </td>
-            }
-        </tr>
-}
-    </tbody>
-</table>
+                                        @using(@Html.BeginForm("JoinCampaignReroute", "CampaignListings"))
+                                        {
+                                            <input type="button" class="btn btn-primary" value="Details" onclick="location.href='@Url.Action("Details","CampaignListings",new {id = @item.Id})'" />
+                                            <input type="hidden" name="CampaignListingID" value="@item.Id" />
+                                            <input type="submit" class="btn btn-primary" value="Join Campaign" />
+                                        }
+                                    <!--</div>-->
+                                </td>
+                            }
+                        </tr>
+                }
+            </tbody>
+        </table>
+    </body>
+</html>

@@ -1,5 +1,19 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model Tavern.Models.CampaignListing
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
+    ViewData["Title"] = "Delete";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
 }
+
+<h1>Delete</h1>
+
+<h3>Are you sure you want to leave campaign: @TempData["CampaignName"]?</h3>
+<div>
+    <h4>CampaignListing</h4>
+    <hr />
+    <form asp-controller="CampaignListings" asp-action="LeaveCampaign">
+        <input type="hidden" asp-for="Id" asp-controller="CampaignListings" asp-action="LeaveCampaignConfirmed"/>
+        <input type="submit" value="Leave Campaign" class="btn btn-danger"> |
+        <a asp-action="Index">Back to List</a>
+    </form>
+</div>

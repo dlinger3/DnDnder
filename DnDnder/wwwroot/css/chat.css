@@ -1,0 +1,36 @@
+﻿.group {
+    padding: 13px;
+    border-radius: 12px;
+    background: rgb(228, 76, 76);
+    margin: 5px 0px;
+    font-weight: bolder;
+    color: black;
+    cursor: pointer;
+}
+
+.chat_body {
+    height: 520px;
+    overflow: scroll;
+}
+
+.less_padding {
+    padding: 2px;
+}
+
+.chat_message {
+    padding: 13px;
+    border-radius: 12px;
+    width: 50%;
+    background: #85C1E9;
+    margin: 6px 4px;
+}
+
+.chat_main {
+    background-color: #e6e6e6;
+    height: 520;
+    padding: 0px;
+}
+
+.group_main {
+    background-color: rgba(228, 76, 76, 50%);
+}
