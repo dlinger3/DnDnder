@@ -7,9 +7,9 @@
 
 <h1>Index</h1>
 
-<p>
-    <a href="/Campaigns/Create">Create New</a>
-</p>
+<div>
+    <input type="button" class="btn btn-primary" value="Create New" onclick="location.href='@Url.Action("Create","Campaigns")'" />
+</div>
 <table class="table">
     <thead>
         <tr>
@@ -38,10 +38,16 @@
                 @Html.DisplayFor(modelItem => item.Details)
             </td>
             <td>
-                <a asp-action="ListCampaign" asp-route-id="@item.Id">List Campaign</a> |
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    <div class="form-group">
+                        @using (Html.BeginForm("Create", "Campaigns"))
+                        {
+                            <input type="hidden" name="id" value="@item.Id" />
+
+                        }
+                        <input type="button" class="btn btn-primary" value="Edit" onclick="location.href='@Url.Action("Edit","Campaigns",new {id = @item.Id})'" />
+                        <input type="button" class="btn btn-primary" value="Details" onclick="location.href='@Url.Action("Details","Campaigns",new {id = @item.Id})'" />
+                        <input type="button" class="btn btn-primary" value="Delete" onclick="location.href='@Url.Action("Delete","Campaigns",new {id = @item.Id})'" />
+                    </div>
             </td>
         </tr>
 }

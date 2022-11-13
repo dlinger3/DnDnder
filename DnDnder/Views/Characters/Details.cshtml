@@ -1,4 +1,6 @@
 ﻿@model Tavern.Models.Character
+@using Tavern.Models
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 @{
     ViewData["Title"] = "Details";
@@ -48,8 +50,7 @@
             @Html.DisplayFor(model => model.Bio)
         </dd>
     </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <div>
+         <input type="button" class="btn btn-primary" value="Back To List" onclick="location.href='@Url.Action("Index","Characters")'" />
+    </div>
 </div>
