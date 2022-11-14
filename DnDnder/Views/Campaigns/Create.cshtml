@@ -50,9 +50,9 @@
         </div>
     </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+    <div>
+        <input type="button" class="btn btn-primary" value="Back To List" onclick="location.href='@Url.Action("Index","Campaigns")'" />
+    </div>
 }
 else
 {

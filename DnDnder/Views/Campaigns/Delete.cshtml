@@ -35,6 +35,8 @@
     <form asp-controller="Campaigns" asp-action="Delete">
         <input type="hidden" asp-for="Id" asp-controller="Campaigns" asp-action="DeleteConfirmed"/>
         <input type="submit" value="Delete" class="btn btn-danger"> |
-        <a asp-action="Index">Back to List</a>
+        <div>
+            <input type="button" class="btn btn-primary" value="Back To List" onclick="location.href='@Url.Action("Index","Campaigns")'" />
+        </div>
     </form>
 </div>
