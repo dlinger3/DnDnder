@@ -83,16 +83,22 @@ namespace Tavern.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(int id)
         {
-            Debug.WriteLine("Entered Create function for Campaign Listing, attempting to add id: " + id);
             CampaignListing newListing = new CampaignListing()
             {
                 CampaignId = id,
                 AppUserID = User.FindFirstValue(ClaimTypes.NameIdentifier)
             };
+            CampaignCharacters campaignDM = new CampaignCharacters
+            {
+                CampaignListingID = id,
+                //TODO: Add a column to the CampaignCharacters table to allow the UserID 
+                CharacterID = User.FindFirstValue(ClaimTypes.NameIdentifier)
+            };
 
             if (ModelState.IsValid)
             {
                 _context.CampaignListing.Add(newListing);
+                
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -113,6 +119,15 @@ namespace Tavern.Controllers
             {
                 return NotFound();
             }
+            List<CampaignCharacters> ListingCharacters = await _context.CampaignCharacters.Where(cl => cl.CampaignListingID.Equals(id)).ToListAsync();
+            List<Character> characters = new List<Character>();
+            foreach(var c in ListingCharacters)
+            {
+                Character nextCharacter = await _context.Character.FindAsync(c.CharacterID);
+                characters.Add(nextCharacter);
+            }
+            ViewData["Characters"] = characters;
+            ViewData["CampaignCharacters"] = ListingCharacters;
             ViewData["CampaignId"] = new SelectList(_context.Campaign, "Id", "CampaignName", campaignListing.CampaignId);
             return View(campaignListing);
         }
@@ -184,6 +199,12 @@ namespace Tavern.Controllers
             var campaignListing = await _context.CampaignListing.FindAsync(id);
             if (campaignListing != null)
             {
+                var listingCharacters = await _context.CampaignCharacters.Where(lc => lc.CampaignListingID.Equals(id)).ToListAsync();
+                foreach(var character in listingCharacters)
+                {
+                    _context.CampaignCharacters.Remove(character);
+                    await _context.SaveChangesAsync();
+                }
                 _context.CampaignListing.Remove(campaignListing);
             }
 
@@ -241,7 +262,7 @@ namespace Tavern.Controllers
             
             TempData["ListingID"] = id;
             TempData["UserID"] = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            TempData["ThisCharacter"] = UserCharacterName;
+            TempData["SendersCharacter"] = UserCharacterName;
             //TODO: Add DM ability for DM to provide a name to show up in the chat members list
             // TempData["DM"] = Listing.DMName; 
             TempData["Players"] = characters;

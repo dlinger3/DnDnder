@@ -126,7 +126,7 @@ namespace Tavern.Controllers
                 try
                 {
                     _context.Update(character);
-                    await _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync();                    
                 }
                 catch (DbUpdateConcurrencyException)
                 {

@@ -22,6 +22,10 @@
             var PostURL = {
                 ActionControllerURL: '@Url.Action("Create","Chat", new {id = @TempData["ListingID"]})'
             };
+            var GetSendersCharacter =
+            {
+                SenderCharacter: '@TempData["SendersCharacter"]'
+            };
         </script>
     </head>
     <body>
@@ -32,8 +36,7 @@
                       <div class="col group_main">
                            <div class="text-center"> Players </div>
                             <div style="height: 500px;overflow: scroll;" id="groups"> 
-                                <!--TODO:CHANGE THE VALUE FOR THIS HIDDEN INPUT-->
-                                 <!--<input type="hidden" value="test" id="currentGroup"/>-->
+                                @*TODO:Implement the <div> for the Dungeon Master name here*@
                                 @foreach (var PlayerCharacter in (dynamic)TempData["Players"] as List<Character>) {
                                     <div class="group"> @PlayerCharacter.Name </div> 
                                 }
@@ -53,7 +56,7 @@
                                 <textarea class="form-control" rows="1" id="MessageInput"></textarea>   
                             </div>
                             <div class="col-md-3 col-sm-3 less_padding">
-                                  <input type="hidden" value=@TempData["ThisCharacter"] id="MessageSentBy"/>
+                                  
                                   <input type="hidden" value=@TempData["ListingID"] id="ListingID"/>
                                   <input type="hidden" value=@TempData["UserID"] id="UserID"/>
                                   <button type="button" class="btn btn-primary" style=" position: absolute;" id="SendMessage">Send Message</button>

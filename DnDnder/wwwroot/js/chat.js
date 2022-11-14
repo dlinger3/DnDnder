@@ -23,7 +23,7 @@ document.getElementById("SendMessage").addEventListener("click", function (event
 {
     event.preventDefault();
     var listingID = document.getElementById("ListingID").value;
-    var userCharacter = document.getElementById("MessageSentBy").value;
+    var userCharacter = GetSendersCharacter.SenderCharacter;
     var message = document.getElementById("MessageInput").value;
     var thisMessage = "";
     connection.invoke("SendMessage", userCharacter, message, listingID).then(function () {

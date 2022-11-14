@@ -1,5 +1,6 @@
 ﻿@model Tavern.Models.CampaignListing
-
+@using Tavern.Models
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
     ViewData["Title"] = "Edit";
     Layout = "~/Pages/Shared/_Layout.cshtml";
@@ -12,15 +13,16 @@
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
             <div class="form-group">
-                <label asp-for="CampaignId" class="control-label"></label>
-                <select asp-for="CampaignId" class="form-control" asp-items="ViewBag.CampaignId"></select>
-                <span asp-validation-for="CampaignId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <form asp-action="Edit" asp-controller="CampaignListings">
+
+                    @foreach(var character in (dynamic)@ViewData["CampaignCharacters"] as List<CampaignCharacters>)
+                    {
+                        <input type="hidden" name="ListingID" value= @character.CampaignListingID/>
+                        <input type="hidden" name="CharacterID" value= @character.CharacterID/>
+                        <input type="submit" value="Remove Player" class="btn btn-danger" />
+                    }
+                </form>
             </div>
         </form>
     </div>
