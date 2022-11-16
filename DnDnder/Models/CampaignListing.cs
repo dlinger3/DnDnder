@@ -8,8 +8,8 @@ namespace Tavern.Models
     {
         public int Id { get; set; }
 
-        //Forms a M:M relationship between Characters and CampaignListings
-        public ICollection<Character>? Players { get; set; }
+        ////Forms a M:M relationship between Characters and CampaignListings
+        //public ICollection<Character>? Players { get; set; }
 
         //Foreign key for Campaign that is associated with this CampaignListing
         [ForeignKey("Campaign")]

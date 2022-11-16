@@ -5,11 +5,11 @@
     Layout = "~/Pages/Shared/_Layout.cshtml";
 }
 
-<h1>Delete</h1>
+<br />
 
-<h3>Are you sure you want to delete this?</h3>
+<h3>Are you sure you want to delete @Model.CampaignName?</h3>
 <div>
-    <h4>Campaign</h4>
+    <h4>This campaign will also be delisted</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -35,6 +35,6 @@
     <form asp-controller="Campaigns" asp-action="Delete">
         <input type="hidden" asp-for="Id" asp-controller="Campaigns" asp-action="DeleteConfirmed"/>
         <input type="submit" value="Delete" class="btn btn-danger"> |
-        <a asp-action="Index">Back to List</a>
+        <input type="button" class="btn btn-primary" value="Back to List" onclick="location.href='@Url.Action("Index","Campaigns")'" />
     </form>
 </div>

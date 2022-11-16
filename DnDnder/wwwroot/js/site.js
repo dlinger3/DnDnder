@@ -10,11 +10,11 @@ function getBannerImageForPage() {
 
     if (title.includes("Home")) {
         console.log("Setting Home Image");
-        document.getElementById("bannerImage").src = "../images/bannerImage.png"
+        document.getElementById("bannerImage").src = "/images/bannerImage.png"
     }
     else if (title.includes("Register")) {
         console.log("Setting Registration Image");
-        document.getElementById("bannerImage").src = "../images/RegisterBannerImage.jpg";
+        document.getElementById("bannerImage").src = "/images/RegisterBannerImage.jpg";
     }
 }
 

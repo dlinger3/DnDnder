@@ -30,10 +30,11 @@ namespace Tavern.Hubs
 
         public async Task AddUserToGroup(string ListingID, string UserID)
         {
-            //TODO: This list is returning without any values for some reason. Need to investigate why. It should have 1 value. 
+            var listing = await _context.CampaignListing.FindAsync(int.Parse(ListingID));
+            var campaign = await _context.Campaign.FindAsync(listing.CampaignId);
             var ListingUsers = await _context.CampaignCharacters
                 .Where(cl => cl.CampaignListingID
-                .Equals(int.Parse(ListingID))).ToListAsync();
+                .Equals(listing.Id)).ToListAsync();
 
             foreach(var user in ListingUsers)
             {
@@ -41,6 +42,10 @@ namespace Tavern.Hubs
                 {
                     await Groups.AddToGroupAsync(Context.ConnectionId, "Group--" + ListingID);
                 }
+            }
+            if(campaign.AppUserID.Equals(UserID))
+            {
+                await Groups.AddToGroupAsync(Context.ConnectionId, "Group--" + ListingID);
             }
             
         }

@@ -1,5 +1,5 @@
 ﻿
-document.getElementById("LeaveCampaignButton").addEventListener("click", function (event) {
+function confirmDeleteAlert(){
     let listingID = document.getElementById("ListingID").value;
 
     $.ajax({

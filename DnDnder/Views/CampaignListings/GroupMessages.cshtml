@@ -4,95 +4,122 @@
 
 @inject UserManager<AppUser> UserManager
 @{
-        Layout = "~/Pages/Shared/_Layout.cshtml";
+    ViewData["Title"] = @TempData["CampaignName"];
+    Layout = "~/Pages/Shared/_Layout.cshtml";
  }
-<!doctype html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <link rel="stylesheet" href="/lib/bootstrap/dist/css/bootstrap.min.css">
-        <link rel="stylesheet" href="/css/chat.css"
-        <title>@ViewData["CampaignName"] Group Chat</title>
-        <script>
-            //Prepares the URL's to be used in the Ajax POST and GET request by using ASP.nets built in routing utility
-            var GetURL = {
-                ActionControllerURL: '@Url.Action("GetAllMessages","Chat", new {id = @TempData["ListingID"]})'
-            };
-            var PostURL = {
-                ActionControllerURL: '@Url.Action("Create","Chat", new {id = @TempData["ListingID"]})'
-            };
-            var GetSendersCharacter =
-            {
-                SenderCharacter: '@TempData["SendersCharacter"]'
-            };
-        </script>
-    </head>
-    <body>
-        <h3 class="text-center" id="CampaignNameHeader"></h3>
-            <div class="container" style="background-color: grey;">
-                  <div class="row">
-                    <div class="col-md-2 less_padding">
-                      <div class="col group_main">
-                           <div class="text-center"> Players </div>
-                            <div style="height: 500px;overflow: scroll;" id="groups"> 
-                                @*TODO:Implement the <div> for the Dungeon Master name here*@
-                                @foreach (var PlayerCharacter in (dynamic)TempData["Players"] as List<Character>) {
-                                    <div class="group"> @PlayerCharacter.Name </div> 
-                                }
-                            </div>
-                      </div>
-                    </div>
-                    <div class="col-md-10 less_padding">
-                      <div class="col-md-12 chat_main">
-                           <div class="chat_body" id="ChatBody">
-                               <!-- List of Messages will display here-->
-                                @foreach (var message in (dynamic)TempData["AllMessages"] as List<Message>) {
-                                <div class="row chat_message"><b>@message.SentBy: </b>&nbsp;@message.MessageText </div>
-                                }
-                           </div>
-                          <div class="row container" style="margin-left: 3px;">
-                            <div class="col-md-9 col-sm-9 less_padding">
-                                <textarea class="form-control" rows="1" id="MessageInput"></textarea>   
-                            </div>
-                            <div class="col-md-3 col-sm-3 less_padding">
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="/lib/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/chat.css" />
+    <script>
+        //Prepares the URL's to be used in the Ajax POST and GET request by using ASP.nets built in routing utility
+        var GetURL = {
+            ActionControllerURL: '@Url.Action("GetAllMessages","Chat", new {id = @TempData["ListingID"]})'
+        };
+        var PostURL = {
+            ActionControllerURL: '@Url.Action("Create","Chat", new {id = @TempData["ListingID"]})'
+        };
+        var GetSendersCharacter =
+        {
+            SenderCharacter: '@TempData["SendersCharacter"]'
+        };
+    </script>
+    <style>
+        ul{list-style-type: none;}
+        label{text-align: right;}
+    </style>
+        
+</head>
+<br />
+<h3 class="text-center" id="CampaignNameHeader">@TempData["CampaignName"] Group Chat</h3>
+<hr />
+<div class="container" style="background-color: grey;">
+        <div class="row" style="padding: 10px">
+        <div class="col-md-2 less_padding">
+            <div class="col group_main"> 
+                <div style="height: 560px; overflow: scroll;" id="groups"> 
+                    <div class="group">Dungeon Master</div> 
+                    <div class="text-center"><b>Players</b></div>
+                    @foreach (var PlayerCharacter in (dynamic)TempData["Players"] as List<Character>) {
+                        <div class="group"> @PlayerCharacter.Name </div> 
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col-md-10 less_padding">
+            <div class="col-md-12 chat_main">
+                <div class="chat_body" id="ChatBody">
+                    <!-- List of Messages will display here-->
+                    @foreach (var message in (dynamic)TempData["AllMessages"] as List<Message>) {
+                    <div class="row chat_message"><b>@message.SentBy: </b>&nbsp;@message.MessageText </div>
+                    }
+                </div>
+                <div class="row container" style="margin-left: 3px;">
+                <div class="col-md-9 col-sm-9 less_padding">
+                    <textarea class="form-control" rows="1" id="MessageInput"></textarea>   
+                </div>
+                <div class="col-md-3 col-sm-3 less_padding">
                                   
-                                  <input type="hidden" value=@TempData["ListingID"] id="ListingID"/>
-                                  <input type="hidden" value=@TempData["UserID"] id="UserID"/>
-                                  <button type="button" class="btn btn-primary" style=" position: absolute;" id="SendMessage">Send Message</button>
-                            </div>
-                          </div>
-                      </div>
-                   </div>
-               </div>
+                        <input type="hidden" value=@TempData["ListingID"] id="ListingID"/>
+                        <input type="hidden" value=@TempData["UserID"] id="UserID"/>
+                        <button type="button" class="btn btn-primary" id="SendMessage">Send Message</button>
+                </div>
+                </div>
             </div>
-            <br />
-            <br />
-            <br />
-            <br />
+        </div>
+    </div>
+</div>
+<br />
+<br />
+<div>
+    <table class="table">
+        <tbody>
             <div>
-                <table class="table">
-                    <thead class="">
-                        <tr>
-                            <th>d4</th>
-                            <th>d6</th>
-                            <th>d8</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @using(Html.BeginForm("RollDice","CampaignListings"))
-                        {
-                            <input type="text" name="d4"/>
-                            <input type="text" name="d6"/>
-                            <input type="text" name="d8"/>
-                            <input type="submit" value="Roll Dice"/>
-                        }
-                    </tbody>
-                </table>
+                <tr>
+                    <h2>Roll your fate...</h2>
+                </tr>
+                <tr>
+                    <form id="diceValues">
+                        <ul>
+                            <li>
+                                <label>d4 &nbsp;</label>
+                                <input type="number" name="d4"/>
+                            </li>
+                            <li>
+                                <label>d6 &nbsp;</label>
+                                <input type="number" name="d6"/>
+                            </li>
+                            <li>
+                                <label>d8 &nbsp;</label>
+                                <input type="number" name="d8"/>
+                            </li>
+                            <li>
+                                <label>d10</label>
+                                <input type="number" name="d10"/>
+                            </li>
+                            <li>
+                                <label>d12</label>
+                                <input type="number" name="d12"/>
+                            </li>
+                            <li>
+                                <label>d20</label>
+                                <input type="number" name="d20"/>
+                            </li>
+                        </ul>
+                        <div>
+                            <input type="button" onclick="rollDice()" value="Roll Dice" class="btn btn-primary" id="DiceRollerSubmit"/>
+                        </div>
+                        <label style="text-align: right">Total: &nbsp;</label>
+                        <output id="DiceTotal" form="diceValues" >0</output>
+                    </form>
+                </tr>
             </div>
-    </body>
-        <script src="/lib/jquery/dist/jquery.min.js"></script>  
-        <script src="/js/signalr/dist/browser/signalr.js"></script>
-        <script src="/js/chat.js"></script>
-        <script src="/js/site.js" asp-append-version="true"></script>
-</html>
+
+
+        </tbody>
+    </table>
+</div>
+<script src="/lib/jquery/dist/jquery.min.js"></script>  
+<script src="/js/signalr/dist/browser/signalr.js"></script>
+<script src="/js/chat.js"></script>
+<script src="/js/site.js" asp-append-version="true"></script>

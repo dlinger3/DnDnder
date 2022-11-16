@@ -18,7 +18,6 @@ namespace Tavern.Controllers
         private readonly ApplicationDbContext _context;
         private readonly UserManager<AppUser> _userManager;
 
-
         public CampaignsController(ApplicationDbContext context, UserManager<AppUser> userManager)
         {
             _context = context;
@@ -33,9 +32,21 @@ namespace Tavern.Controllers
                 var userID =  User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var userCampaignSet = await _context.Campaign
                     .Where(c => c.AppUserID.Contains(userID)).ToListAsync();
-
+                Dictionary<int, ListedCampaign> listedCampaigns = new Dictionary<int, ListedCampaign>();
+                if(userCampaignSet != null)
+                {
+                    foreach(var campaign in userCampaignSet)
+                    {
+                        var listing = await _context.CampaignListing.Where(cl => cl.CampaignId.Equals(campaign.Id)).FirstOrDefaultAsync();
+                        if(listing != null)
+                        {
+                            ListedCampaign campaignListing = new ListedCampaign(campaign.Id, true, listing.Id);
+                            listedCampaigns.Add(campaign.Id, campaignListing);
+                        }
+                    }
+                }
+                ViewData["listedCampaigns"] = listedCampaigns;
                 return View(userCampaignSet);
-                
             }
             else
             {
@@ -124,7 +135,7 @@ namespace Tavern.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,campaignName,worldName,details")] Campaign campaign)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,CampaignName,WorldName,Details,AppUserID,AppUser")] Campaign campaign)
         {
             if (id != campaign.Id)
             {
@@ -209,7 +220,33 @@ namespace Tavern.Controllers
             //List<CampaignListing> ListOfCampaigns = await _context.CampaignListing.ToListAsync();
             return RedirectToAction("Create", "CampaignListings");
         }
+        public async Task<IActionResult> DelistCampaign(int listingID)
+        {
+            if (_context.CampaignListing == null)
+            {
+                return Problem("Entity set 'ApplicationDbContext.CampaignListing'  is null.");
+            }
+            var campaignListing = await _context.CampaignListing.FindAsync(listingID);
+            if (campaignListing != null)
+            {
+                var listingCharacters = await _context.CampaignCharacters.Where(lc => lc.CampaignListingID.Equals(listingID)).ToListAsync();
+                foreach (var character in listingCharacters)
+                {
+                    _context.CampaignCharacters.Remove(character);
+                    await _context.SaveChangesAsync();
+                }
+                var listingMessages = await _context.Message.Where(m => m.CampaignListingID == listingID).ToListAsync();
+                foreach (var message in listingMessages)
+                {
+                    _context.Message.Remove(message);
+                    await _context.SaveChangesAsync();
+                }
+                _context.CampaignListing.Remove(campaignListing);
+            }
 
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
         private bool CampaignExists(int id)
         {
             return (_context.Campaign?.Any(e => e.Id == id)).GetValueOrDefault();

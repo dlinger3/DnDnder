@@ -9,7 +9,7 @@
 
 <h4>Campaign</h4>
 <hr />
-<div class="row">
+<div class="row justify-content-md-center">
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -19,25 +19,29 @@
                 <input asp-for="CampaignName" class="form-control" />
                 <span asp-validation-for="CampaignName" class="text-danger"></span>
             </div>
+            <br />
+            <br />
             <div class="form-group">
                 <label asp-for="WorldName" class="control-label">World Name</label>
                 <input asp-for="WorldName" class="form-control" />
                 <span asp-validation-for="WorldName" class="text-danger"></span>
             </div>
+            <br />
+            <br />
             <div class="form-group">
                 <label asp-for="Details" class="control-label">Details</label>
                 <input asp-for="Details" class="form-control" />
                 <span asp-validation-for="Details" class="text-danger"></span>
             </div>
+            <br />
+            <br />
             <div class="form-group">
+                <input type="hidden" value="@Model.AppUserID" name="AppUserID"/>
                 <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="button" value="Back to List" class="btn btn-primary" onclick="location.href='@Url.Action("Index","Campaigns")'" />
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

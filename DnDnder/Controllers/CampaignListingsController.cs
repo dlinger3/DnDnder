@@ -57,18 +57,30 @@ namespace Tavern.Controllers
 
             var CampaignCharactersSet = await _context.CampaignCharacters
                 .Where(cl => cl.CampaignListingID.Equals(id)).ToListAsync();
-
+            Campaign campaign = campaignListing.Campaign;
             List<Character> Players = new List<Character>();
-            foreach(var player in CampaignCharactersSet)
+            var UserID = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            TempData["ThisUsersID"] = UserID;
+            TempData["UserIsInCampaign"] = false;
+            //User is the DM and owns the campaign listing
+            if (campaign.AppUserID.Equals(UserID))
+            {
+                TempData["UserIsInCampaign"] = true;
+            }
+            foreach (var player in CampaignCharactersSet)
             {
                 Character nextCharacter = await _context.Character.Where(c => c.Id.Equals(player.CharacterID)).FirstAsync();
+                if(nextCharacter.AppUserID.Equals(UserID))
+                {
+                    TempData["UserIsInCampaign"] = true;
+                }
                 Players.Add(nextCharacter);
             }
             if(Players.Any())
             {
+                
                 ViewData["CharacterList"] = Players;
             }
-
             return View(campaignListing);
         }
 
@@ -88,17 +100,10 @@ namespace Tavern.Controllers
                 CampaignId = id,
                 AppUserID = User.FindFirstValue(ClaimTypes.NameIdentifier)
             };
-            CampaignCharacters campaignDM = new CampaignCharacters
-            {
-                CampaignListingID = id,
-                //TODO: Add a column to the CampaignCharacters table to allow the UserID 
-                CharacterID = User.FindFirstValue(ClaimTypes.NameIdentifier)
-            };
 
             if (ModelState.IsValid)
             {
                 _context.CampaignListing.Add(newListing);
-                
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -137,35 +142,16 @@ namespace Tavern.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,CampaignId")] CampaignListing campaignListing)
+        //[Bind("Id,CampaignId")] CampaignListing campaignListing
+        public async Task<IActionResult> Edit(int ListingID, int CharacterID)
         {
-            if (id != campaignListing.Id)
+            var listingCharacterRecord = await _context.CampaignCharacters.Where(cc => cc.CampaignListingID == ListingID && cc.CharacterID == CharacterID).ToListAsync();
+            foreach(var character in listingCharacterRecord)
             {
-                return NotFound();
+                _context.CampaignCharacters.Remove(character);
+                await _context.SaveChangesAsync();
             }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(campaignListing);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!CampaignListingExists(campaignListing.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["CampaignId"] = new SelectList(_context.Campaign, "Id", "CampaignName", campaignListing.CampaignId);
-            return View(campaignListing);
+            return RedirectToAction("Edit", new {id = ListingID });
         }
 
         // GET: CampaignListings/Delete/id
@@ -205,6 +191,12 @@ namespace Tavern.Controllers
                     _context.CampaignCharacters.Remove(character);
                     await _context.SaveChangesAsync();
                 }
+                var listingMessages = await _context.Message.Where(m => m.CampaignListingID == id).ToListAsync();
+                foreach (var message in listingMessages)
+                {
+                    _context.Message.Remove(message);
+                    await _context.SaveChangesAsync();
+                }
                 _context.CampaignListing.Remove(campaignListing);
             }
 
@@ -219,7 +211,7 @@ namespace Tavern.Controllers
             //Used to set the character name of the current user to TempData["ThisPlayer"]. This is used to display who post a message in the listings chat. 
             string UserCharacterName ="";
 
-            if (id == null || _context.ListingChatGroups == null)
+            if (id == null)
             {
                 return NotFound();
             }
@@ -236,22 +228,17 @@ namespace Tavern.Controllers
             Campaign campaign = await _context.Campaign.FindAsync(Listing.CampaignId);
             List<CampaignCharacters> ListingCharacters = await _context.CampaignCharacters.Where(clc => clc.CampaignListingID.Equals(id)).ToListAsync();
             List<Character> characters = new List<Character>();
-
+            var UserID = User.FindFirstValue(ClaimTypes.NameIdentifier);
             //Gathers all of the player characters in this listing to be stored in ViewData["Players"]
             foreach (var ListingCharacter in ListingCharacters)
             {
-                
                 Character character = await _context.Character
                     .Where(c => c.Id
                     .Equals(ListingCharacter.CharacterID)
                     && c.AppUserID
                     .Equals(ListingCharacter.AppUserID))
                     .FirstAsync();
-
-
-                //TODO: Need to add ability for the creater (DM) of the CampaignListing to get added here as well. Ability
-                //TODO: for DM to provide a name for themself needs to be added or something similar?
-                if (ListingCharacter.AppUserID.Equals(User.FindFirstValue(ClaimTypes.NameIdentifier)))
+                if (ListingCharacter.AppUserID.Equals(UserID))
                 {
 
                     UserCharacterName = character.Name;
@@ -259,7 +246,11 @@ namespace Tavern.Controllers
 
                 characters.Add(character);
             }
-            
+            if (campaign.AppUserID.Equals(UserID))
+            {
+                UserCharacterName = "Dungeon Master";
+            }
+
             TempData["ListingID"] = id;
             TempData["UserID"] = User.FindFirstValue(ClaimTypes.NameIdentifier);
             TempData["SendersCharacter"] = UserCharacterName;
@@ -335,8 +326,7 @@ namespace Tavern.Controllers
                     };
                     
                     _context.CampaignCharacters.Add(NewCampaignCharacter);
-                    _context.SaveChanges();
-                    
+                    await _context.SaveChangesAsync();
 
                     var UpdatedListing = await _context.CampaignListing.ToListAsync();
                     return RedirectToAction(nameof(Index));
@@ -375,12 +365,6 @@ namespace Tavern.Controllers
         private bool CampaignListingExists(int id)
         {
             return _context.CampaignListing.Any(e => e.Id == id);
-        }
-
-
-        public void RollDice(string d4, string d6, string d8)
-        {
-            Debug.WriteLine("Input is: " + d4 +"," + d6 +","+ d8);
         }
 
     }

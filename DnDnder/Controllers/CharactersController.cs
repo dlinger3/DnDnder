@@ -114,7 +114,7 @@ namespace Tavern.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,name,Class,level,race,alignment,bio")] Character character)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Class,Level,Race,Alignment,Bio,AppUserID")] Character character)
         {
             if (id != character.Id)
             {
@@ -174,6 +174,12 @@ namespace Tavern.Controllers
             var character = await _context.Character.FindAsync(id);
             if (character != null)
             {
+                var charactersCampaigns = await _context.CampaignCharacters.Where(cc => cc.CharacterID == id).ToListAsync();
+                foreach(var listing in charactersCampaigns)
+                {
+                    _context.Remove(listing);
+                    await _context.SaveChangesAsync();
+                }
                 _context.Character.Remove(character);
             }
 
