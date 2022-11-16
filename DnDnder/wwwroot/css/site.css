@@ -26,8 +26,9 @@ body {
     box-sizing: border-box;
     padding-bottom: 10% !important;
     height: inherit;
+    border-color: rgba(59, 59, 59, 0.5);
     border-style: inset;
-    border-color: rgb(255, 255, 255);
+    box-shadow: 0px 25px 25px 25px rgba(55,54,51, 1);
     z-index: 2;
 }
 
@@ -41,10 +42,9 @@ body {
     width: auto;
     z-index: 1;
     min-height: calc(100vh-0px);
-    background-image: 
-        linear-gradient(to bottom, rgb(139, 139, 139, 0.82), rgb(199, 2, 2, 0.23)),
-        url(/images/backgroundImage.jpg);
+    background-image: linear-gradient(to bottom, rgb(139, 139, 139, 0.82), rgb(199, 2, 2, 0.23)), url(/images/backgroundImage.jpg);
     background-size: cover;
+    box-shadow: 0 30px 40px rgba(0,0,0,.1);
 }
 
 .footerContainer {
