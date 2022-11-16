@@ -9,13 +9,12 @@ Tavern a group finder and organizer for Dungeons and Dragons
   >when pasting, you should have a filepath that looks something like: C:\...\DnDnder
 -Open your command prompt and run the following commands
 **********************************************************************************************************************************
-cd path/to/project
-(where  path/to/project is what you paste in. Should point to DnDnder folder)
-dotnet tool install --global dotnet-ef --version 7.0.0
-dotnet add package Microsoft.EntityFrameworkCore.SqlServer
-dotnet add package Microsoft.EntityFrameworkCore.Design
-dotnet ef database update
-dotnet run
+>cd path/to/project
+>dotnet tool install --global dotnet-ef --version 7.0.0
+>dotnet add package Microsoft.EntityFrameworkCore.SqlServer
+>dotnet add package Microsoft.EntityFrameworkCore.Design
+>dotnet ef database update
+>dotnet run
 **********************************************************************************************************************************
 -You should have seen output lines indicating that the program
   ran and is listening on a local host
@@ -26,7 +25,8 @@ dotnet run
 
 -open broswer and go to the localhost URL that was in your command prompt (there may be more than 1)
 
-::::::::::::::::::::::TROUBLESHOOTING::::::::::::::::::::::::::::::::::::::::
+TROUBLESHOOTING
+**********************************************************************************************************************************
 - if you receive an error that looks like:
   "database [name] already exist. choose a different database name"
   > Run these commands: 
@@ -39,8 +39,9 @@ dotnet run
   "Can not create db file..."
     > delete it from c:/users/(yourUser), it will have a name similar to:
       aspnet-DnDnder-53bc9b9d-9d6a-45d4-8429-2a2761773502.mdf
-:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-::::::::::::::::::::::USING THE WEBSITE::::::::::::::::::::::::::::::::::::::
+**********************************************************************************************************************************
+USING THE WEBSITE
+**********************************************************************************************************************************
 -Main Features:
      >Register an account using a legitimate email
        --Email confirmation will be sent to this email. IT IS VERY LIKELY TO BE IN YOUR SPAM
