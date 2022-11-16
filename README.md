@@ -9,12 +9,12 @@ Tavern a group finder and organizer for Dungeons and Dragons
   >when pasting, you should have a filepath that looks something like: C:\...\DnDnder
 -Open your command prompt and run the following commands
 **********************************************************************************************************************************
->cd path/to/project
->dotnet tool install --global dotnet-ef --version 7.0.0
->dotnet add package Microsoft.EntityFrameworkCore.SqlServer
->dotnet add package Microsoft.EntityFrameworkCore.Design
->dotnet ef database update
->dotnet run
+cd path/to/project\n
+dotnet tool install --global dotnet-ef --version 7.0.0
+dotnet add package Microsoft.EntityFrameworkCore.SqlServer
+dotnet add package Microsoft.EntityFrameworkCore.Design
+dotnet ef database update
+dotnet run
 **********************************************************************************************************************************
 -You should have seen output lines indicating that the program
   ran and is listening on a local host
