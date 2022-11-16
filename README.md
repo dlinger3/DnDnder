@@ -10,6 +10,7 @@ Tavern a group finder and organizer for Dungeons and Dragons
 -Open your command prompt and run the following commands
 -----------------------------------------------------------------------------------------------------
 cd path/to/project (where  path/to/project is what you paste in. Should point to DnDnder folder)
+
 dotnet tool install --global dotnet-ef --version 7.0.0
 dotnet add package Microsoft.EntityFrameworkCore.SqlServer
 dotnet add package Microsoft.EntityFrameworkCore.Design
