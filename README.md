@@ -9,7 +9,7 @@ Tavern a group finder and organizer for Dungeons and Dragons
   >when pasting, you should have a filepath that looks something like: C:\...\DnDnder
 -Open your command prompt and run the following commands
 **********************************************************************************************************************************
-cd path/to/project\n
+cd path/to/project
 dotnet tool install --global dotnet-ef --version 7.0.0
 dotnet add package Microsoft.EntityFrameworkCore.SqlServer
 dotnet add package Microsoft.EntityFrameworkCore.Design
