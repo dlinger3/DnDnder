@@ -27,6 +27,7 @@ builder.Services.AddTransient<IEmailSender, EmailConfirmSender>();
 builder.Services.Configure<IdentityOptions>(opts =>
 {
     opts.SignIn.RequireConfirmedEmail = true;
+    
 });
 
 
@@ -57,11 +58,11 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
 app.UseAuthentication();
 app.UseAuthorization();
 

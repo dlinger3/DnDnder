@@ -1,15 +1,14 @@
 ﻿@model Tavern.Models.Character
-
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
     ViewData["Title"] = "Delete";
     Layout = "~/Pages/Shared/_Layout.cshtml";
 }
-
-<h1>Delete</h1>
-
-<h3>Are you sure you want to delete this?</h3>
+<br />
+<br />
+<h3>Are you sure you want to delete @Model.Name?</h3>
 <div>
-    <h4>Character</h4>
+    <h4>You will be removed from any campaigns you have joined with @Model.Name</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -42,17 +41,22 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Alignment)
         </dd>
-        <dt class = "col-sm-2">
+    </dl>
+    <dl>
+        <dt class = "align-content-center">
             @Html.DisplayNameFor(model => model.Bio)
         </dt>
-        <dd class = "col-sm-10">
+        <hr />
+        <dd class = "align-content-lg-start">
             @Html.DisplayFor(model => model.Bio)
         </dd>
     </dl>
-    
-    <form asp-action="Delete">
+    <br />
+    <hr />
+    <br />
+    <form asp-action="Delete" asp-controller="Characters">
         <input type="hidden" asp-for="Id" />
         <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
+        <input type="button" class="btn btn-primary" value="Back to List" onclick="location.href='@Url.Action("Index","Characters")'" />
     </form>
 </div>

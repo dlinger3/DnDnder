@@ -5,31 +5,16 @@
     Layout = "~/Pages/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
+<h1>Your Characters</h1>
 
-<p>
-    <a href="Characters/Create">Create New</a>
-</p>
+<div>
+    <input type="button" class="btn btn-primary" value="Create New" onclick="location.href='@Url.Action("Create","Characters")'" />
+</div>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Class)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Level)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Race)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Alignment)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Bio)
+                <p><b>Characters</b></p>
             </th>
             <th></th>
         </tr>
@@ -38,27 +23,18 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Name)
+                <div>
+                    <b>@Html.DisplayFor(modelItem => item.Name)</b>
+                </div>
+                <div>
+                    <p>Level @Html.DisplayFor(modelItem => item.Level) @Html.DisplayFor(modelItem => item.Race) @Html.DisplayFor(modelItem => item.Class)</p>
+                </div>
+                
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Class)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Level)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Race)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Alignment)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Bio)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <input type="button" class="btn btn-primary" value="Edit" onclick="location.href='@Url.Action("Edit","Characters",new {id = @item.Id})'" />
+                <input type="button" class="btn btn-primary" value="Details" onclick="location.href='@Url.Action("Details","Characters",new {id = @item.Id})'" />
+                <input type="button" class="btn btn-primary" value="Delete" onclick="location.href='@Url.Action("Delete","Characters",new {id = @item.Id})'" />
             </td>
         </tr>
 }

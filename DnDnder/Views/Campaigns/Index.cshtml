@@ -1,57 +1,64 @@
 ﻿@model IEnumerable<Tavern.Models.Campaign>
+@using Tavern.Models
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Pages/Shared/_Layout.cshtml";
 }
 
-<h1>My Campaigns</h1>
+<h1>Your Campaigns</h1>
 
 <p>
-    <a href="/Campaigns/Create">Create New</a>
+     <input type="button" class="btn btn-primary" value="Create New" onclick="location.href='@Url.Action("Create","Campaigns")'" />
 </p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.CampaignName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.WorldName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Details)
+                <p><b>Campaigns</b></p>
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-           
-            <td>
-                @Html.DisplayFor(modelItem => item.CampaignName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.WorldName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Details)
-            </td>
-            <td>
+        @foreach (var item in Model) {
+            <tr>
+                <td>
+                    <b>@Html.DisplayFor(modelItem => item.CampaignName)</b>
+                    <br>
+                    <br>
+                    @Html.DisplayFor(modelItem => item.WorldName)
+                </td>
+                <td>
                     <div class="form-group">
-                        @using(Html.BeginForm("Create","CampaignListings"))
-                        {
-                            <input type="hidden" name="id" value="@item.Id" />
-                            <input type="submit" value="List Campaign"/>
+                        @{
+                            ListedCampaign isListed;
+                            Dictionary<int, ListedCampaign> listings = (Dictionary<int, ListedCampaign>)@ViewData["listedCampaigns"];
+                            if(listings.TryGetValue(@item.Id, out isListed))
+                            {
+                                var listingID = isListed.ListingID;
+                                <form asp-controller="Campaigns" asp-action="DelistCampaign" method="post"
+                                    onclick="return confirm('Are you sure you want to delist @item.CampaignName?\n\n All players will be removed, and any chat history deleted')">
+                                    <input type="hidden" name="listingID" value="@listingID"/>
+                                    <button type="submit" class="btn btn-danger">Delist Campaign</button>
+                                </form>
+                            }
+                            else
+                            {
+                                @using(Html.BeginForm("Create","CampaignListings"))
+                                {
+                                    <input type="hidden" name="id" value="@item.Id" />
+                                    <input type="submit" class="btn btn-primary" value="List Campaign"/>
+                                }
+                            }
+                            <hr>
+                            <input type="button" class="btn btn-primary" value="Edit" onclick="location.href='@Url.Action("Edit","Campaigns",new {id = @item.Id})'" />
+                            <input type="button" class="btn btn-primary" value="Details" onclick="location.href='@Url.Action("Details","Campaigns",new {id = @item.Id})'" />
+                            <input type="button" class="btn btn-primary" value="Delete" onclick="location.href='@Url.Action("Delete","Campaigns",new {id = @item.Id})'" />
                         }
-                        <input type="button" class="btn btn-primary" value="Edit" onclick="location.href='@Url.Action("Edit","Campaigns",new {id = @item.Id})'" />
-                        <input type="button" class="btn btn-primary" value="Details" onclick="location.href='@Url.Action("Details","Campaigns",new {id = @item.Id})'" />
-                        <input type="button" class="btn btn-primary" value="Delete" onclick="location.href='@Url.Action("Delete","Campaigns",new {id = @item.Id})'" />
-                    </div>
-               
-            </td>
-        </tr>
-}
+                     </div>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

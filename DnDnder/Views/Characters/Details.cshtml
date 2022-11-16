@@ -5,10 +5,10 @@
     Layout = "~/Pages/Shared/_Layout.cshtml";
 }
 
-<h1>Details</h1>
+<h1>Character</h1>
 
 <div>
-    <h4>Character</h4>
+    <h4>Details</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -41,15 +41,21 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Alignment)
         </dd>
-        <dt class = "col-sm-2">
+    </dl>
+    <dl>
+        <dt class = "align-content-center">
             @Html.DisplayNameFor(model => model.Bio)
         </dt>
-        <dd class = "col-sm-10">
+        <hr />
+        <dd class = "align-content-lg-start">
             @Html.DisplayFor(model => model.Bio)
         </dd>
     </dl>
 </div>
+<br />
+<hr />
+<br />
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <input type="button" class="btn btn-primary" value="Edit" onclick="location.href='@Url.Action("Edit","Characters", new{id = @Model.Id})'" /> |
+    <input type="button" class="btn btn-primary" value="Back To List" onclick="location.href='@Url.Action("Index","Characters")'" />
 </div>

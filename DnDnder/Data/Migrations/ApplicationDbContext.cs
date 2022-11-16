@@ -19,8 +19,6 @@ namespace Tavern.Data.Migrations
 
         public DbSet<CampaignCharacters>? CampaignCharacters { get; set; }
 
-        public DbSet<ListingChatGroup>? ListingChatGroups { get; set; }
-
         public DbSet<Message>? Message { get; set; }
 
         //protected override void OnModelCreating(ModelBuilder builder)

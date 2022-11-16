@@ -59,4 +59,35 @@ connection.on("ReceiveMessage", function (userCharacter, message) {
     newMessageDiv.className = "row chat_message";
 });
 
+function rollDice()
+ {
+    var diceValue = [4, 6, 8, 10, 12, 20];
+    var numOfDice = new Array(diceValue.length);
+    var totalForEachDice = new Array(diceValue.length);
+    var currDiceTotal = 0;
+
+    for (var i = 0; i < diceValue.length; i++)
+    {
+        numOfDice[i] = Number(document.getElementById("diceValues").elements[i].value);
+        document.getElementById("diceValues").elements[i].value = ""
+    }
+
+    for (var i = 0; i < diceValue.length; i++)
+    {
+        //+1 is due to ran.Next() being up to but not including higherBound
+        var higherBound = diceValue[i];
+        for (var j = 0; j < numOfDice[i]; j++)
+        {
+            currDiceTotal += Math.floor(Math.random() * higherBound) + 1;
+        }
+        totalForEachDice[i] = currDiceTotal;
+        currDiceTotal = 0;
+    }
+    var overallSum = 0;
+    for (var i = 0; i < totalForEachDice.length; i++) {
+        overallSum += totalForEachDice[i];
+    }
+    document.getElementById("DiceTotal").innerHTML = overallSum.toString();
+}
+
 

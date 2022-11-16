@@ -16,13 +16,18 @@ html {
 body {
     height: 100vh;
     background-color: #f2f2f2 !important;
+    
 }
 
 .bodyBackGroundStripe {
-    background-color: #cccccc !important;
+    background-color: rgba(209, 209, 209, 0.85) !important;
     left: 20%;
     right: 20%;
-    height: 100%;
+    box-sizing: border-box;
+    padding-bottom: 10% !important;
+    height: inherit;
+    border-style: inset;
+    border-color: rgb(255, 255, 255);
     z-index: 2;
 }
 
@@ -30,11 +35,16 @@ body {
     display: flex;
     justify-content: center;
     text-align: center;
-    margin: 0 auto !important;
-    height: 100% !important;
+    margin-right: 1px !important;
+    margin-left: 1px !important;
+    height: auto !important;
     width: auto;
     z-index: 1;
     min-height: calc(100vh-0px);
+    background-image: 
+        linear-gradient(to bottom, rgb(139, 139, 139, 0.82), rgb(199, 2, 2, 0.23)),
+        url(/images/backgroundImage.jpg);
+    background-size: cover;
 }
 
 .footerContainer {

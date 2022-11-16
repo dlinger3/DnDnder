@@ -1,5 +1,9 @@
 ﻿@model IEnumerable<Tavern.Models.CampaignListing>
-
+@using Microsoft.AspNetCore.Identity
+@using Tavern.Models
+@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Pages/Shared/_Layout.cshtml";
@@ -13,67 +17,108 @@
             <thead>
                 <tr>
                     <th>
-                        @Html.DisplayNameFor(model => model.Campaign.CampaignName)
+                        <b>Listed Campaigns</b>
                     </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Campaign.WorldName)
-                    </th>
-
                     <th></th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model) {
+                @if(Model.Count() == 0)
+                {
+                    <tr>
+                        <td>
+                            No active listings currently. <a href="/Campaigns/Index">Create a campaign and be the first!</a>
+                        </td>
+                    </tr>
+                }
+                @if(SignInManager.IsSignedIn(User))
+                {
+                    @foreach (var item in Model) 
+                    {
                         <tr>
-                            @if(@ViewBag.AppUserID == @item.AppUserID)
+                            @if (@ViewBag.AppUserID == @item.AppUserID)
                             {
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.Campaign.CampaignName)
+                                    <div>
+                                        <b>@Html.DisplayFor(modelItem => item.Campaign.CampaignName)</b>
+                                        <br />
+                                        @Html.DisplayFor(modelItem => item.Campaign.WorldName)
+                                    </div>
                                 </td>
                                 <td>
-                                    <input type="button" class="btn btn-primary" value="Details" 
-                                           onclick="location.href='@Url.Action("Details","CampaignListings",new {id = @item.Id})'" /> |
-                    
-                                    <input type="button" class="btn btn-primary" value="Edit" 
-                                           onclick="location.href='@Url.Action("Edit","CampaignListings",new {id = @item.Id})'" /> |
+                                   <input type="button" class="btn btn-primary" value="Details" 
+                                               onclick="location.href='@Url.Action("Details","CampaignListings",new {id = @item.Id})'" /> |
 
-                                    <input type="button" class="btn btn-primary" value="Delete" 
-                                           onclick="location.href='@Url.Action("Delete", "CampaignListings",new {id = @item.Id})'" />
+                                   <input type="button" class="btn btn-primary" value="Edit" 
+                                               onclick="location.href='@Url.Action("Edit","CampaignListings",new {id = @item.Id})'" />
+                                   <hr />
+                                   <form  asp-asp-controller="CampaignListings" asp-action="Delete" method="post" asp-route-id="@item.Id" 
+                                                onclick="return confirm('Are you sure you want to delist @item.Campaign.CampaignName?\n\n All players will be removed, and any chat history deleted')">
+                                        <input type="submit" value="Delist Campaign" class="btn btn-danger"/>
+                                   </form>
 
                                 </td>
                             }
-                            else if(@item.UserIsInCampaign(@ViewBag.ListingsMap, @item.Id, @ViewBag.AppUserID))
+                            else if (@item.UserIsInCampaign(@ViewBag.ListingsMap, @item.Id, @ViewBag.AppUserID))
                             {
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.Campaign.CampaignName)
+                                    <div>
+                                        <b>@Html.DisplayFor(modelItem => item.Campaign.CampaignName)</b>
+                                        <br />
+                                        @Html.DisplayFor(modelItem => item.Campaign.WorldName)
+                                    </div>
                                 </td>
                                 <td>
                                     <input type="button" class="btn btn-primary" value="Details" 
-                                           onclick="location.href='@Url.Action("Details","CampaignListings",new {id = @item.Id})'" /> |
+                                               onclick="location.href='@Url.Action("Details","CampaignListings",new {id = @item.Id})'" />
 
-                                    <input type="button" class="btn btn-danger" value="Leave Campaign" 
-                                           onclick="location.href='@Url.Action("LeaveCampaign","CampaignListings",new {id = @item.Id})'" />
+@*                                    <input type="button" class="btn btn-danger" value="Leave Campaign" 
+                                               onclick="location.href='@Url.Action("LeaveCampaign","CampaignListings",new {id = @item.Id})'" />*@
+                                    <hr />
+                                    <form  asp-asp-controller="CampaignListings" asp-action="LeaveCampaign" asp-route-id="@item.Id"
+                                           onclick="return confirm('Are you sure you want to leave @item.Campaign.CampaignName?')">
+                                           <input type="submit" value="Leave Campaign" class="btn btn-danger"/>
+                                    </form>
                                 </td>
                             }
                             else
                             {
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.Campaign.CampaignName)
+                                    <div>
+                                        <b>@Html.DisplayFor(modelItem => item.Campaign.CampaignName)</b>
+                                        <br />
+                                        @Html.DisplayFor(modelItem => item.Campaign.WorldName)
+                                    </div>
                                 </td>
                                 <td>
-                                    
-                                    <!--<div class="form-group">-->
-                        
-                                        @using(@Html.BeginForm("JoinCampaignReroute", "CampaignListings"))
-                                        {
-                                            <input type="button" class="btn btn-primary" value="Details" onclick="location.href='@Url.Action("Details","CampaignListings",new {id = @item.Id})'" />
-                                            <input type="hidden" name="CampaignListingID" value="@item.Id" />
-                                            <input type="submit" class="btn btn-primary" value="Join Campaign" />
-                                        }
-                                    <!--</div>-->
+                                    @using (@Html.BeginForm("JoinCampaignReroute", "CampaignListings"))
+                                    {
+                                        <input type="button" class="btn btn-primary" value="Details" onclick="location.href='@Url.Action("Details","CampaignListings",new {id = @item.Id})'" />
+                                        <input type="hidden" name="CampaignListingID" value="@item.Id" />
+                                        <input type="submit" class="btn btn-primary" value="Join Campaign" />
+                                    }
                                 </td>
                             }
                         </tr>
+                    }
+                }
+                else
+                {
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                <div>
+                                    <b>@Html.DisplayFor(modelItem => item.Campaign.CampaignName)</b>
+                                    <br />
+                                    @Html.DisplayFor(modelItem => item.Campaign.WorldName)
+                                </div>
+                            </td>
+                            <td>
+                                <input type="button" class="btn btn-primary" value="Details" onclick="location.href='@Url.Action("Details","CampaignListings",new {id = @item.Id})'" />
+                            </td>
+                        </tr>
+                    }
                 }
             </tbody>
         </table>

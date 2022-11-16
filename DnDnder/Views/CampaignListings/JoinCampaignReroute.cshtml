@@ -4,48 +4,31 @@
     Layout = "~/Pages/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
+<h1>Your Characters</h1>
 
 <p>
-    <a href="/Characters/Create">Create New</a>
+    <input type="button" class="btn btn-primary" value="Create New Character" onclick="location.href='@Url.Action("Create","Characters")'" />
 </p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                <p><b>Available Characters</b></p>
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Class)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Level)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Race)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Alignment)
-            </th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Class)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Level)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Race)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Alignment)
+                <div>
+                    <b>@Html.DisplayFor(modelItem => item.Name)</b>
+                </div>
+                <div>
+                    <p>Level @Html.DisplayFor(modelItem => item.Level) @Html.DisplayFor(modelItem => item.Race) @Html.DisplayFor(modelItem => item.Class)</p>
+                </div>
+                
             </td>
             <td>
                 @using(Html.BeginForm("JoinCampaign","CampaignListings"))
@@ -53,7 +36,7 @@
                 <input type="hidden" name="UserID" value="@item.AppUserID" />
                 <input type="hidden" name="CharaID" value="@item.Id" />
                 <input type="hidden" name="ListingID" value= @TempData["CampaignListingID"] />
-                <input type="submit" value="Join Campaign" />
+                <input type="submit" class="btn btn-primary" value="Join Campaign" />
                 }
             </td>
         </tr>

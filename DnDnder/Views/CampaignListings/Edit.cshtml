@@ -8,25 +8,53 @@
 
 <h1>Edit</h1>
 
-<h4>CampaignListing</h4>
+<h4>Players in this campaign</h4>
 <hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div class="form-group">
-                <form asp-action="Edit" asp-controller="CampaignListings">
-
-                    @foreach(var character in (dynamic)@ViewData["CampaignCharacters"] as List<CampaignCharacters>)
-                    {
-                        <input type="hidden" name="ListingID" value= @character.CampaignListingID/>
-                        <input type="hidden" name="CharacterID" value= @character.CharacterID/>
-                        <input type="submit" value="Remove Player" class="btn btn-danger" />
-                    }
-                </form>
-            </div>
-        </form>
-    </div>
-</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if(((dynamic)@ViewData["Characters"] as List<Character>).Count == 0)
+        {
+            <tr>
+                <td>
+                    <p>
+                        <b>No players are currently in this campaign.</b>
+                    </p>
+                </td>
+            </tr>
+        }
+        else
+        {
+            @foreach(var character in (dynamic)@ViewData["Characters"] as List<Character>)
+                {
+                    <tr>
+                        <td>
+                            <div>
+                                <p><b>@character.Name</b></p>
+                            </div>
+                            <div>
+                                <p>Level @character.Level @character.Race @character.Class</p>
+                            </div>
+                        </td>
+                        <td>
+                            @using (@Html.BeginForm("Edit", "CampaignListings"))
+                            {
+                                <input type="hidden" name="ListingID" value="@Model.Id"/>
+                                <input type="hidden" name="CharacterID" value="@character.Id"/>
+                                <input type="submit" value="Remove Player" class="btn btn-danger" />
+                            }
+                        </td>
+                    </tr>
+                }            
+        }
+                   
+    </tbody>
+</table>
 
 <div>
     <a asp-action="Index">Back to List</a>
