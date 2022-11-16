@@ -1,21 +1,31 @@
 # Tavern
 Tavern a group finder and organizer for Dungeons and Dragons
-
 **********************************************************************************************************************************
+DOWNLOAD AND UNZIP PROJECT
+**********************************************************************************************************************************
+```
 -After downloading the project files from GitHub, unzip them to somewhere on your machine where you
  can find them. Navigate to the location you unzipped the file, and click the DnDFolder
 
--right click and copy the file path address as text to be used in command prompt
-  >when pasting, you should have a filepath that looks something like: C:\...\DnDnder
--Open your command prompt and run the following commands
+-right click and copy the file path address as text to be used in command prompt.
+ When pasting, you should have a filepath that looks something like: C:\...\DnDnder
+```
 **********************************************************************************************************************************
+COMMANDS TO RUN
+**********************************************************************************************************************************
+-Open your command prompt and run the following commands:
+```
 cd path/to/project
 dotnet tool install --global dotnet-ef --version 7.0.0
 dotnet add package Microsoft.EntityFrameworkCore.SqlServer
 dotnet add package Microsoft.EntityFrameworkCore.Design
 dotnet ef database update
 dotnet run
+```
 **********************************************************************************************************************************
+COPY LOCALHOST CONNECTION URL
+**********************************************************************************************************************************
+```
 -You should have seen output lines indicating that the program
   ran and is listening on a local host
 
@@ -24,9 +34,11 @@ dotnet run
   where #### will be replaced with some numbers
 
 -open broswer and go to the localhost URL that was in your command prompt (there may be more than 1)
-
+```
+**********************************************************************************************************************************
 TROUBLESHOOTING
 **********************************************************************************************************************************
+```
 - if you receive an error that looks like:
   "database [name] already exist. choose a different database name"
   > Run these commands: 
@@ -39,9 +51,11 @@ TROUBLESHOOTING
   "Can not create db file..."
     > delete it from c:/users/(yourUser), it will have a name similar to:
       aspnet-DnDnder-53bc9b9d-9d6a-45d4-8429-2a2761773502.mdf
+```
 **********************************************************************************************************************************
 USING THE WEBSITE
 **********************************************************************************************************************************
+```
 -Main Features:
      >Register an account using a legitimate email
        --Email confirmation will be sent to this email. IT IS VERY LIKELY TO BE IN YOUR SPAM
@@ -62,4 +76,5 @@ USING THE WEBSITE
                 *Messages are saved and displayed to the chat if you leave and come back. 
        --The campaign listing details page will also have a dice roller. This accepts input for types of dice
           and returns output based on the input given. 
+```
 **********************************************************************************************************************************
