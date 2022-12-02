@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using Tavern.Models;
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -27,23 +29,7 @@
     </header>
     
     <div class="bannerContainer">
-        @*@if(@ViewData["Title"].Equals("Home - DnDnder"))
-        {
-            Console.Write("Title Retrieved was " + @ViewData["Title"]);
-            <img id="bannerImage"  src="~/images/bannerImage.png" alt="A party gathers in an inn" />
-        }
-        else if(@ViewData["Title"].Equals("Register - DnDnder"))
-        {
-            Console.Write("Title Retrieved was " + @ViewData["Title"]);
-            <img id="bannerImage"  src="~/images/RegisterBannerImage.jpg" alt="A party gathers in an inn" />
-        }
-        else
-        {  
-            Console.Write("Title Retrieved was " + @ViewData["Title"]);
-            <img id="bannerImage"  src="~/images/bannerImage.png" alt="A party gathers in an inn" />
-        }*@
-
-        <img class="bannerImage" src="/images/bannerImage.png" alt=""/>
+        <img class="bannerImage" id="bannerImageId" src="/images/bannerImage.png" alt="Banner Image"/>
     </div>
 
     <div class="layoutContainer">
@@ -54,6 +40,78 @@
         </div>
     </div>
     
+    <!-- Modals -->
+    <!-- Character Img Grid Modal-->
+    <div id="CharacterImgModal" class="modal fade" tabindex="-1" role="dialog">
+	    <div class="modal-dialog modal-xl" role="document">
+		    <div class="modal-content modal-xl">
+			    <div class="modal-header modal-xl">
+				    <h5 class="modal-title">Select Character Image</h5>
+				    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <hr />
+			    </div>
+			    <div class="modal-body modal-xl">
+				    <div class="grid-container">
+                        @{
+                            var count = 1;
+                            var pathID = "characterImg";
+                            foreach (var img in Util.getAllCharacterImages())
+                            {
+                                pathID += @count;
+                                <div class="grid-item">
+							        <img src="@Url.Content(@img)" class="grid-img" alt="Character Image"/>
+                                    <input type="hidden" value="@img" id="@pathID" />
+							        <input type="radio" name="CharacterImg" id=@count value=@count />
+                                </div>
+                                count++;
+                                pathID = "characterImg";
+                            }
+				        }
+				    </div>
+			    </div>
+			    <div class="modal-footer modal-xl">
+				    <input id="btnSaveCharacterImg" type="button" value="Save" class="btn btn-primary" />
+				    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+			    </div>
+		    </div>
+	    </div>
+    </div>
+    <!-- Campaign Img Grid Modal-->
+    <div id="CampaignImgModal" class="modal fade" tabindex="-1" role="dialog">
+	    <div class="modal-dialog modal-xl" role="document">
+		    <div class="modal-content modal-xl">
+			    <div class="modal-header modal-xl">
+				    <h5 class="modal-title">Select Campaign Image</h5>
+				    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <hr />
+			    </div>
+			    <div class="modal-body modal-xl">
+				    <div class="grid-container">
+                        @{
+                            count = 1;
+                            pathID = "campaignImg";
+                            foreach (var img in Util.getAllCampaignImages())
+                            {
+                                //var imgValue = @ViewData["CharacterImgPaths"] as string[];
+                                pathID += @count;
+                                <div class="grid-item">
+							        <img src="@Url.Content(@img)" class="grid-img" alt="Campaign Image"/>
+                                    <input type="hidden" value="@img" id="@pathID" />
+							        <input type="radio" name="CampaignImg" id=@count value=@count />
+                                </div>
+                                count++;
+                                pathID = "campaignImg";
+                            }
+				        }
+				    </div>
+			    </div>
+			    <div class="modal-footer modal-xl">
+				    <input id="btnSaveCampaignImg" type="button" value="Save" class="btn btn-primary" />
+				    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+			    </div>
+		    </div>
+	    </div>
+    </div>
 
     <footer class="footer text-muted footerText navBarZOverride">
         <div class="footerContainer">
@@ -63,7 +121,7 @@
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/site.js" ></script>
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>

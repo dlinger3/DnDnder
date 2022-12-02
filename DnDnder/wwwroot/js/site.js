@@ -4,66 +4,51 @@
 // Write your JavaScript code.
 
 function getBannerImageForPage() {
+    //var page = window.location.pathname;
+    //var page = window.location.pathname.split("/").pop().split('#').shift();
+    //page.split('#').shift();
 
-    var title = document.title;
-    console.log("retrieved title: " + title);
-
-    if (title.includes("Home")) {
-        console.log("Setting Home Image");
-        document.getElementById("bannerImage").src = "/images/bannerImage.png"
-    }
-    else if (title.includes("Register")) {
-        console.log("Setting Registration Image");
-        document.getElementById("bannerImage").src = "/images/RegisterBannerImage.jpg";
-    }
+    //if (page.includes("/CampaignListings/Details/")) {
+    //    //imgPath = @CampaignImg.campaignImgPath;
+    //    document.getElementById("bannerImageId").src.value = imgPath;
+    //}
+    //else if (title.includes("Register")) {
+    //    console.log("Setting Registration Image");
+    //    document.getElementById("bannerImage").src = "/images/RegisterBannerImage.jpg";
+    //}
 }
 
-//TODO: METHODS FOR PUSHER. THESE CAN POTENTIALLY BE REMOVED IF SignalR api is used instead of Pusher for realtime chat functionality
-//$("#groups").on("", ".group", function () {
-//    let group_id = $(this).attr("data-group_id");
 
-//    $('.group').css({ "border-style": "none", cursor: "pointer" });
-//    $(this).css({ "border-style": "inset", cursor: "default" });
 
-//    $("#currentGroup").val(group_id); // update the current group_id to html file...
-//    currentGroupId = group_id;
+document.getElementById("btnSaveCharacterImg").addEventListener("click", function (event) {
+    event.preventDefault
+    var ele = document.getElementsByName('CharacterImg');
+    
+    for (i = 0; i < ele.length; i++) {
+        if (ele[i].checked) {
+            document.getElementById("CharacterImgValue").value = ele[i].value;
+            var imgPathID = "characterImg" + ele[i].value;
+            var imgPath = document.getElementById(imgPathID).value;
+            document.getElementById("CharacterImgIcon").src = imgPath;
+            $('#CharacterImgModal').modal('toggle');
+            break;
+        }
+    }
+})
 
-//    // get all messages for the group and populate it...
-//    $.get("/api/message/" + group_id, function (data) {
-//        let message = "";
+document.getElementById("btnSaveCampaignImg").addEventListener("click", function (event) {
+    event.preventDefault
+    var ele = document.getElementsByName('CampaignImg');
 
-//        data.forEach(function (data) {
-//            let position = (data.addedBy == $("#UserName").val()) ? " float-right" : "";
+    for (i = 0; i < ele.length; i++) {
+        if (ele[i].checked) {
+            document.getElementById("CampaignImgValue").value = ele[i].value;
+            var imgPathID = "campaignImg" + ele[i].value;
+            var imgPath = document.getElementById(imgPathID).value;
+            document.getElementById("CampaignImg").src = imgPath;
+            $('#CampaignImgModal').modal('toggle');
+            break;
+        }
+    }
+})
 
-//            message += `<div class="row chat_message` + position + `">
-//                             <b>` + data.addedBy + `: </b>` + data.message +
-//                `</div>`;
-//        });
-
-//        $(".chat_body").html(message);
-//    });
-
-//});
-
-//$("#SendMessage").click(function () {
-//    console.log("VALUES PASSED TO ON CLICK SendMessage{ " + "ListingID: " + $("ListingID").val() + ", SentBy: " + $("#MessageSentBy").val() + ", MessageText: " + $("#Message").val() + " }")
-//    $.ajax({
-//        type: "POST",
-//        url: "/GroupMessages/" + $("ListingID").val(),
-//        data: JSON.stringify({
-//            SentBy: $("#MessageSentBy").val().toString(),
-//            //ListingChapGroupID: $("#currentGroup").val(),
-//            MessageText: $("#Message").val(),
-//            socketId: pusher.connection.socket_id
-//        }),
-//        success: (data) => {
-//            $(".chat_body").append(`<div class="row chat_message float-right"><b>`
-//                + data.data.SentBy + `: </b>` + $("#Message").val() + `</div>`
-//            );
-//            console.log("Message was added");
-//            $("#Message").val('');
-//        },
-//        dataType: 'json',
-//        contentType: 'application/json'
-//    });
-//});

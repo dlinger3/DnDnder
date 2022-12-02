@@ -3,17 +3,19 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Tavern.Data.Migrations;
 
 #nullable disable
 
-namespace Tavern.Data.Migrations
+namespace DnDnder.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221123013626_Added_CharacterImg_To_CharacterModel")]
+    partial class Added_CharacterImg_To_CharacterModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -234,9 +236,6 @@ namespace Tavern.Data.Migrations
 
                     b.Property<string>("AppUserID")
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("CampaignImg")
-                        .HasColumnType("int");
 
                     b.Property<string>("CampaignName")
                         .IsRequired()

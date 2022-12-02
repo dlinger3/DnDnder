@@ -1,5 +1,6 @@
 ﻿@model Tavern.Models.Campaign
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using Tavern.Models;
 @{
     ViewData["Title"] = "Edit";
     Layout = "~/Pages/Shared/_Layout.cshtml";
@@ -11,6 +12,11 @@
 <hr />
 <div class="row justify-content-md-center">
     <div class="col-md-4">
+        <img id="CampaignImg" src=@Util.getCampaignImageById(@Model.CampaignImg) class="creation-img" alt="Campaign Image"/>
+        <br />
+        <br />
+        <button type="button" id="modalBtnClick" class="btn btn-primary"
+					data-bs-toggle="modal" data-bs-target="#CampaignImgModal" data-bs-backdrop="false">+</button>
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
@@ -36,6 +42,7 @@
             <br />
             <br />
             <div class="form-group">
+                <input id="CampaignImgValue" type="hidden" value="0" asp-for="CampaignImg" />
                 <input type="hidden" value="@Model.AppUserID" name="AppUserID"/>
                 <input type="submit" value="Save" class="btn btn-primary" />
                 <input type="button" value="Back to List" class="btn btn-primary" onclick="location.href='@Url.Action("Index","Campaigns")'" />

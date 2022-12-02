@@ -20,6 +20,7 @@
                         <b>Listed Campaigns</b>
                     </th>
                     <th></th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -38,6 +39,11 @@
                         <tr>
                             @if (@ViewBag.AppUserID == @item.AppUserID)
                             {
+                                <td>
+                                    <div>
+                                        <img src="@Util.getCampaignImageById(@item.Campaign.CampaignImg)" class="list-img">
+                                    </div>
+                                </td>
                                 <td>
                                     <div>
                                         <b>@Html.DisplayFor(modelItem => item.Campaign.CampaignName)</b>
@@ -63,6 +69,11 @@
                             {
                                 <td>
                                     <div>
+                                        <img src="@Util.getCampaignImageById(@item.Campaign.CampaignImg)" class="list-img">
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>
                                         <b>@Html.DisplayFor(modelItem => item.Campaign.CampaignName)</b>
                                         <br />
                                         @Html.DisplayFor(modelItem => item.Campaign.WorldName)
@@ -83,6 +94,11 @@
                             }
                             else
                             {
+                                <td>
+                                    <div>
+                                        <img src="@Util.getCampaignImageById(@item.Campaign.CampaignImg)" class="list-img">
+                                    </div>
+                                </td>                                
                                 <td>
                                     <div>
                                         <b>@Html.DisplayFor(modelItem => item.Campaign.CampaignName)</b>
@@ -107,6 +123,11 @@
                     @foreach (var item in Model)
                     {
                         <tr>
+                            <td>
+                                <div>
+                                    <img src="@Util.getCampaignImageById(@item.Campaign.CampaignImg)" class="list-img">
+                                </div>
+                            </td>
                             <td>
                                 <div>
                                     <b>@Html.DisplayFor(modelItem => item.Campaign.CampaignName)</b>

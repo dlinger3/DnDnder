@@ -22,6 +22,8 @@ namespace Tavern.Models
         [MaxLength(5000)]
         public string Bio { get; set; }
 
+        public int CharacterImg { get; set; }
+
         //Foreign key and AppUser that is associated with this Character
         [ForeignKey("AppUser")]
         public string? AppUserID { get; set; }

@@ -6,14 +6,21 @@
     Layout = "~/Pages/Shared/_Layout.cshtml";
 }
 
+<script>
+        var CampaignImg =
+        {
+            campaignImgPath: @Util.getCampaignImageById(@Model.Campaign.CampaignImg);
+        }
+</script>
+
 <h1>@Html.DisplayFor(model => model.Campaign.CampaignName)</h1>
 
 <html>
     <body>
         <div>
             <h4>@Html.DisplayFor(model => model.Campaign.WorldName)</h4>
+            <img src="@Util.getCampaignImageById(@Model.Campaign.CampaignImg)" class="creation-img">
             <hr />
-            
             <table class="table">
                 <thead>
                     <tr>
@@ -44,6 +51,11 @@
                         @foreach(var item in @ViewData["CharacterList"] as List<Character>)
                         {
                             <tr>
+                                <td>
+                                    <div>
+                                        <img src="@Util.getCharacterImageById(@item.CharacterImg)" class="list-img">
+                                    </div>
+                                </td>
                                 <td>
                                     <div>
                                         <b>@Html.DisplayFor(modelItem => item.Name)</b>

@@ -62,7 +62,6 @@ namespace Tavern.Controllers
             var UserID = User.FindFirstValue(ClaimTypes.NameIdentifier);
             TempData["ThisUsersID"] = UserID;
             TempData["UserIsInCampaign"] = false;
-            //User is the DM and owns the campaign listing
             if (campaign.AppUserID.Equals(UserID))
             {
                 TempData["UserIsInCampaign"] = true;

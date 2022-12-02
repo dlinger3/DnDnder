@@ -115,7 +115,70 @@ body {
 
 .tableData {
     display: table-cell;
+}
 
+.float-container{
+    width: inherit;
+    margin: 10px;
+    overflow: hidden;
+}
+
+.float-left-child{
+    width: 65%;
+    float: left;
+}
+.float-right-child {
+    margin-left: 200px;
+}
+/*************************************************************************************************************************/
+/********************************************CSS STYLES FOR Character/Campaign Images*************************************/
+.grid-container {
+    display: grid;
+    border-radius: 25px;
+    grid-template-columns: auto auto auto auto auto;
+    background-color: rgb(104, 13, 0, 0.40);
+    padding: 15px;
+}
+
+.grid-item {
+    background-color: rgb(81, 9, 0, 0.90);
+    border-radius: 50%;
+    border-style: none;
+    padding: 3px;
+    margin: 5px;
+    display: grid;
+    grid-template-columns: 100%;
+}
+
+.creation-img {
+    height: 220px;
+    width: 220px;
+    border-radius: 50%;
+}
+
+.list-img {
+    height: 120px;
+    width: 120px;
+    border-radius: 50%;
+}
+
+.grid-img {
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 50%;
+}
+/*************************************************************************************************************************/
+/********************************************CSS STYLES FOR MODALS*******************************************************/
+
+.default-Img-Container {
+    display: inline-block;
+    background-image: url("/images/CharacterImages/characterDefaultImg.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
 }
 
 /*************************************************************************************************************************/

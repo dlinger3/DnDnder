@@ -62,6 +62,7 @@ namespace Tavern.Controllers
         // GET: Characters/Create
         public IActionResult Create()
         {
+            ViewData["CharacterImgPaths"] = Util.getAllCharacterImages();
             return View();
         }
 
@@ -70,7 +71,7 @@ namespace Tavern.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Class,Level,Race,Alignment,Bio")] Character character)
+        public async Task<IActionResult> Create([Bind("Id,Name,Class,Level,Race,Alignment,Bio,CharacterImg")] Character character)
         {
             character.AppUserID = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var errors = ModelState.Values.SelectMany(v => v.Errors);
@@ -114,7 +115,7 @@ namespace Tavern.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Class,Level,Race,Alignment,Bio,AppUserID")] Character character)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Class,Level,Race,Alignment,Bio,AppUserID,CharacterImg ")] Character character)
         {
             if (id != character.Id)
             {

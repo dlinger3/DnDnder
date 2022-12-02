@@ -1,5 +1,6 @@
 ﻿@model Tavern.Models.Character
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using Tavern.Models;
 @{
     ViewData["Title"] = "Edit";
     Layout = "~/Pages/Shared/_Layout.cshtml";
@@ -11,6 +12,13 @@
 <hr />
 <div class="row justify-content-md-center">
     <div class="col-md-4">
+		<!--- MODAL BUTTON --->
+		<img id="CharacterImgIcon" src=@Util.getCharacterImageById(@Model.CharacterImg) class="creation-img" alt="Character Image"/>
+		<br />
+		<br />
+		<button type="button" id="modalBtnClick" class="btn btn-primary"
+				data-bs-toggle="modal" data-bs-target="#CharacterImgModal" data-bs-backdrop="false">+</button>
+		<br />
         <form asp-controller="Characters" asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
@@ -124,6 +132,7 @@
 	        <br />
 	        <br />
             <div class="form-group">
+				<input id="CharacterImgValue" type="hidden" value="0" asp-for="CharacterImg" />
                 <input type="submit" value="Save" class="btn btn-primary" />
 				<input type="hidden" value="@Model.AppUserID" name="AppUserID"/>
                 <input type="button" class="btn btn-primary" value="Back To List" onclick="location.href='@Url.Action("Index","Characters")'" />

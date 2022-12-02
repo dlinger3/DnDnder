@@ -17,6 +17,8 @@ namespace Tavern.Models
         [MaxLength(5000)]
         public string Details { get; set; }
 
+        public int CampaignImg { get; set; }
+
         //Foreign key and AppUser that is associated with this Campaign
         [ForeignKey("AppUser")]
         public string? AppUserID  { get; set; }

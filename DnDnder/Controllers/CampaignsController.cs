@@ -83,7 +83,7 @@ namespace Tavern.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,CampaignName,WorldName,Details,AppUserID,AppUser")] Campaign campaign)
+        public async Task<IActionResult> Create([Bind("Id,CampaignName,WorldName,Details,CampaignImg")] Campaign campaign)
         {
             try
             {
@@ -135,7 +135,7 @@ namespace Tavern.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,CampaignName,WorldName,Details,AppUserID,AppUser")] Campaign campaign)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,CampaignName,WorldName,Details,AppUserID,CampaignImg")] Campaign campaign)
         {
             if (id != campaign.Id)
             {
