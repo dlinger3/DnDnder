@@ -5,7 +5,8 @@ DOWNLOAD AND UNZIP PROJECT
 **********************************************************************************************************************************
 ```
 -After downloading the project files from GitHub, unzip them to somewhere on your machine where you
- can find them. Navigate to the location you unzipped the file, and click the DnDFolder
+ can find them. Navigate to the location you unzipped the file, and click the DnDnder Folder 
+(DnDnder was the original project name but has since been changed to Tavern)
 
 -right click and copy the file path address as text to be used in command prompt.
  When pasting, you should have a filepath that looks something like: C:\...\DnDnder
